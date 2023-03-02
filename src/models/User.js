@@ -1,32 +1,31 @@
 const db = require("../database/db")
-const User = db.Sequelize.define("users", {
+const User = db.sequelize.define("users", {
   name: {
-    type: db.sequelize.STRING,
+    type: db.Sequelize.STRING,
   },
   email: {
-    type: db.sequelize.STRING,
+    type: db.Sequelize.STRING,
+    allowNull: false,
     unique: true,
   },
   birth: {
-    type: db.sequelize.STRING,
+    type: db.Sequelize.STRING,
   },
   password: {
-    type: db.sequelize.STRING,
+    type: db.Sequelize.STRING,
   },
   token_email: {
-    type: db.sequelize.STRING,
+    type: db.Sequelize.STRING,
   },
   confirmation: {
-    type: db.sequelize.BOOLEAN,
+    type: db.Sequelize.BOOLEAN,
   },
   filter: {
-    type: db.sequelize.NUMBER,
+    type: db.Sequelize.NUMBER,
   },
   status: {
-    type: db.sequelize.NUMBER,
+    type: db.Sequelize.NUMBER,
   }
 })
-
-User.sync({ force: true })
 
 module.exports = User

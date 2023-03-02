@@ -1,5 +1,5 @@
-const sequelize = require("sequelize")
-const Sequelize = new sequelize("cesbc", "root", "root", {
+const Sequelize = require("sequelize")
+const sequelize = new Sequelize("cesbc", "root", "root", {
   host: "localhost",
   dialect: "mysql",
 })
@@ -9,7 +9,7 @@ module.exports = {
   Sequelize: Sequelize,
 }
 
-Sequelize.authenticate()
+sequelize.authenticate()
   .then(() => {
     console.log("Conexão realizada com sucesso ao banco de dados")
   })

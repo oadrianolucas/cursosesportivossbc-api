@@ -10,4 +10,13 @@ router.get("/", (req, res) => {
   res.json(status)
 })
 
+router.use((req, res) => {
+  var err = new Error('Not Found')
+  err.status = "404"
+  const status = {
+    error: err
+  }
+  res.json(status)
+})
+
 module.exports = router

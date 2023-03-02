@@ -1,6 +1,4 @@
-const sequelize = require("sequelize")
 const User = require("../models/User")
-const bcrypt = require('bcrypt')
 
 const UsersController = {
     PostSingUp(req, res){
