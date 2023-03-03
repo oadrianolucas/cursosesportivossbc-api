@@ -1,22 +1,18 @@
 const router = require("express").Router()
 const usersController = require("./controllers/UsersController")
+const registriesController = require("./controllers/RegistriesController")
 
+const status = require('./middlewares/status')
 router.post('/signup', usersController.PostSingUp)
+router.post('/created/registry', registriesController.PostCreatedRegistry)
 
 router.get("/", (req, res) => {
-  const status = {
-    status: "online"
-  }
-  res.json(status)
+  res.json(status.success)
 })
 
 router.use((req, res) => {
-  var err = new Error('Not Found')
-  err.status = "404"
-  const status = {
-    error: err
-  }
-  res.json(status)
+  new Error('Not Found')
+  res.json(status.error)
 })
 
 module.exports = router
