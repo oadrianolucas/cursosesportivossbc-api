@@ -1,5 +1,4 @@
 const Registry = require("../models/Registry")
-//const User = require("../models/User")
 const status = require('../middlewares/status')
 
 const RegistriesController = {

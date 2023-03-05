@@ -7,11 +7,8 @@ const User = db.sequelize.define("users", {
   password: {
     type: db.Sequelize.STRING,
   },
-  token_email: {
+  token: {
     type: db.Sequelize.STRING,
-  },
-  confirmation: {
-    type: db.Sequelize.BOOLEAN,
   },
   filter: {
     type: db.Sequelize.INTEGER,
