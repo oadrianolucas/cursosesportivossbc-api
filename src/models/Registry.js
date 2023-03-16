@@ -1,5 +1,6 @@
+// Registros
 const db = require("../database/db")
-//const User = require("../models/User");
+//const User = require("../models/User")
 const Registry = db.sequelize.define("registries", {
   name: {
     type: db.Sequelize.STRING,
@@ -22,13 +23,17 @@ const Registry = db.sequelize.define("registries", {
   sus: {
     type: db.Sequelize.STRING,
   },
+  userId: {
+    type: db.Sequelize.INTEGER,
+    allowNull: false,
+  },
 })
-
 /*
 User.hasMany(Registry)
-Registry.sync({force: true}).then(() =>{
-  console.log('Create Registry Table')
-}).catch(err => console.log('Err Create Registry Table: ' + err))
+Registry.sync({ force: true })
+  .then(() => {
+    console.log("Create Registry Table")
+  })
+  .catch((err) => console.log("Err Create Registry Table: " + err))
 */
-
 module.exports = Registry

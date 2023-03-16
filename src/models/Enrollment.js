@@ -1,7 +1,8 @@
+// Inscrição
 const db = require("../database/db")
 //const Course = require("../models/Course");
 const Enrollment = db.sequelize.define("enrollments", { 
-    name: db.Sequelize.STRING,
+    hash: db.Sequelize.STRING,
 })
 /*
 Enrollment.hasMany(Course)

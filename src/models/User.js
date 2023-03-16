@@ -1,3 +1,4 @@
+// Usuários
 const db = require("../database/db")
 const User = db.sequelize.define("users", {
   email: {
@@ -15,7 +16,7 @@ const User = db.sequelize.define("users", {
   },
   status: {
     type: db.Sequelize.INTEGER,
-  }
+  },
 })
 
 /*

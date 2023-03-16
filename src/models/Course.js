@@ -1,3 +1,4 @@
+// Curso
 const db = require("../database/db")
 //const SportCenter = require("../models/SportCenter");
 //const Season = require("../models/Season");

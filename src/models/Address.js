@@ -1,3 +1,4 @@
+// Emd
 const db = require("../database/db")
 //const Registry = require("../models/Registry");
 const Address = db.sequelize.define("adresses", { 

@@ -32,6 +32,7 @@ const UsersController = {
       }
     })
   },
+
   PostEmailToken(req, res) {
     const email = req.body.email
     const token = req.body.token
@@ -58,6 +59,7 @@ const UsersController = {
       }
     })
   },
+
   PostResetPasswordEmail(req, res) {
     const email = req.body.email
     const token = crypto.randomBytes(2).toString("hex")
@@ -85,6 +87,7 @@ const UsersController = {
       }
     })
   },
+
   PostResetPassword(req, res) {
     const id = req.body.id
     const password = req.body.password
@@ -113,6 +116,7 @@ const UsersController = {
       res.json(status.error)
     }
   },
+
   GetFindAllUsers(req, res) {
     User.findAll().then((users) => {
       res.json({
@@ -120,6 +124,7 @@ const UsersController = {
       })
     })
   },
+
   PostLogin(req, res) {
     const email = req.body.email
     const password = req.body.password

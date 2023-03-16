@@ -1,3 +1,4 @@
+// Centros Esportivos
 const db = require("../database/db")
 //const Address = require("../models/Address");
 const SportCenter = db.sequelize.define("sportscenters", { 

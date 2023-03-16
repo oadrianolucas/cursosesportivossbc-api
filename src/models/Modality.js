@@ -1,3 +1,4 @@
+// Modalidades
 const db = require("../database/db")
 //const Program = require("../models/Program");
 const Modality = db.sequelize.define("modalities", { 

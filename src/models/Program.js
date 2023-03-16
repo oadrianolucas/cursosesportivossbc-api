@@ -1,3 +1,4 @@
+// Programas Esportivos
 const db = require("../database/db")
 const Program = db.sequelize.define("programs", { 
     name: db.Sequelize.STRING,
