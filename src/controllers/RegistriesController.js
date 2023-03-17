@@ -1,53 +1,79 @@
 const Registry = require("../models/Registry")
 const User = require("../models/User")
-const status = require("../middlewares/status")
-
+const msg = require("../middlewares/msg")
 const RegistriesController = {
   PostCreatedRegistry(req, res) {
-    //Erro no if do status user
-    const { cpf, rg, birth, userId, name, phone, sexy, sus } = req.body
-    User.findByPk(userId).then((User) => {
-      if (User != undefined) {
-        console.log(User.status)
-        if (User.status === 0) {
-          if (birth > new Date() - 18) {
-            console.log("O primeiro cadastro precisa ser maior de 18 anos")
-            return res.json(status.error)
-          }
-        }
-        Registry.findOne({ where: { cpf: cpf } }).then((Cpf) => {
-          if (Cpf != undefined) {
-            return res.json(status.error)
-          }
-        })
-        Registry.findOne({ where: { rg: rg } }).then((Rg) => {
-          if (Rg != undefined) {
-            return res.json(status.error)
-          }
-        })
-        Registry.create({
-          name: (name || "").toLowerCase(),
-          birth,
-          phone,
-          sexy: (sexy || "").toLowerCase(),
-          cpf,
-          rg,
-          sus,
-          userId,
-        })
-        User.update(
-          {
-            status: 1,
-          },
-          {
-            where: {
-              id: userId,
-            },
-          }
-        )
-        return res.json(status.success)
+    const { cpf, birth, userId, name, phone, sexy, sus } = req.body
+    Registry.findOne({ where: { cpf: cpf } }).then((registry) => {
+      if (registry != undefined) {
+        res.json({ error: msg.error.cpf_found })
       } else {
-        res.send("Usuário não enconstrato.")
+        User.findByPk(userId).then((user) => {
+          if (user != undefined) {
+            if (user.status == 0) {
+              const partesData = birth.split("/")
+              const dataNascimento = new Date(
+                partesData[2],
+                partesData[1] - 1,
+                partesData[0]
+              )
+              const idadeEmMilissegundos = new Date() - dataNascimento
+              const idadeEmAnos =
+                idadeEmMilissegundos / (365.25 * 24 * 60 * 60 * 1000)
+              if (idadeEmAnos < 18) {
+                res.json({ error: msg.error.biggerorequal18 })
+              } else {
+                Registry.create({
+                  name: (name || "").toLowerCase(),
+                  birth,
+                  phone,
+                  sexy: (sexy || "").toLowerCase(),
+                  cpf,
+                  sus,
+                  userId,
+                })
+                  .then(() => {
+                    res.json({ success: msg.success.create_registry })
+                  })
+                  .catch((err) => {
+                    res.json({ error: err })
+                  })
+                User.update(
+                  {
+                    status: 1,
+                  },
+                  {
+                    where: {
+                      id: userId,
+                    },
+                  }
+                )
+                  .then()
+                  .catch((err) => {
+                    res.json({ error: err })
+                  })
+              }
+            } else {
+              Registry.create({
+                name: (name || "").toLowerCase(),
+                birth,
+                phone,
+                sexy: (sexy || "").toLowerCase(),
+                cpf,
+                sus,
+                userId,
+              })
+                .then(() => {
+                  res.json({ success: msg.success.create_registry })
+                })
+                .catch((err) => {
+                  res.json({ error: err })
+                })
+            }
+          } else {
+            res.json({ error: msg.error.user_not_found })
+          }
+        })
       }
     })
   },

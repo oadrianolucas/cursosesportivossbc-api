@@ -1,5 +1,5 @@
 const User = require("../models/User")
-const status = require("../middlewares/status")
+const msg = require("../middlewares/msg")
 const nodemailer = require("../middlewares/nodemailer")
 const crypto = require("crypto")
 const bcrypt = require("bcryptjs")
@@ -11,9 +11,9 @@ const UsersController = {
     const salt = bcrypt.genSaltSync(10)
     const hash = bcrypt.hashSync(password, salt)
     const token = crypto.randomBytes(2).toString("hex")
-    User.findOne({ where: { email: email } }).then((Email) => {
-      if (Email != undefined) {
-        res.json(status)
+    User.findOne({ where: { email: email } }).then((user) => {
+      if (user != undefined) {
+        res.json({ error: msg.error.email })
       } else {
         User.create({
           email: email,
@@ -24,7 +24,7 @@ const UsersController = {
         })
           .then(() => {
             nodemailer.emailConfirm(email, token)
-            res.json(status.success.created_user)
+            res.json({ success: msg.success.create_user })
           })
           .catch((err) => {
             res.json({ error: err })
@@ -49,13 +49,13 @@ const UsersController = {
           }
         )
           .then(() => {
-            res.json(status.success.email_password_confirm)
+            res.json({ success: msg.success.email_password_confirm })
           })
           .catch((err) => {
             res.json({ error: err })
           })
       } else {
-        res.json(status.error)
+        res.json({ error: msg.error.email_password_confirm })
       }
     })
   },
@@ -77,13 +77,13 @@ const UsersController = {
         )
           .then(() => {
             nodemailer.emailResetPassword(email, token)
-            res.json(status.success)
+            res.json(msg.success)
           })
           .catch((err) => {
             res.json({ error: err })
           })
       } else {
-        res.json(status.error)
+        res.json(msg.error)
       }
     })
   },
@@ -107,13 +107,13 @@ const UsersController = {
         }
       )
         .then(() => {
-          res.json(status.success)
+          res.json(msg.success)
         })
         .cath((err) => {
           res.json({ error: err })
         })
     } else {
-      res.json(status.error)
+      res.json(msg.error)
     }
   },
 
@@ -138,15 +138,15 @@ const UsersController = {
             token: user.token,
           }
           if (token == null) {
-            res.json({ sucess: status.success })
+            res.json({ sucess: msg.success })
           } else {
-            res.json({ error: status.error })
+            res.json({ error: msg.error })
           }
         } else {
-          res.json({ error: status.error })
+          res.json({ error: msg.error })
         }
       } else {
-        res.json({ error: status.error })
+        res.json({ error: msg.error })
       }
     })
   },

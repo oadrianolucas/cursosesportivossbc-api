@@ -17,9 +17,6 @@ const Registry = db.sequelize.define("registries", {
   cpf: {
     type: db.Sequelize.STRING,
   },
-  rg: {
-    type: db.Sequelize.STRING,
-  },
   sus: {
     type: db.Sequelize.STRING,
   },
