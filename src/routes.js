@@ -3,6 +3,9 @@ const usersController = require("./controllers/UsersController")
 const registriesController = require("./controllers/RegistriesController")
 const seasonsController = require("./controllers/SeasonsController")
 const programsController = require("./controllers/ProgramsController")
+const addressesController = require("./controllers/AddressesController")
+const gymsController = require("./controllers/GymsController")
+
 const msg = require("./middlewares/msg")
 const filter = require("./middlewares/filter")
 
