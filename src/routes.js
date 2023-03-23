@@ -16,6 +16,8 @@ router.post("/reset/password", usersController.PostResetPasswordEmail)
 router.get("/dashboard", usersController.GetFindAllUsers)
 router.post("/create/season", seasonsController.PostCreateSeason)
 router.post("/create/program", programsController.PostCreateProgram)
+router.post("/create/gym", gymsController.PostCreatedGym)
+router.post("/create/address", addressesController.PostCreateAddress)
 router.post(
   "/create/registry",
   filter,

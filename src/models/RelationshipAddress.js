@@ -17,16 +17,10 @@ const RelationshipAddress = db.sequelize.define("relationshipAddress", {
     allowNull: false,
   },
 })
-/*
-// Associação entre RelationshipAddress e Address (um endereço pode estar vinculado a muitos usuários e centros esportivos)
-Address.belongsToMany(User, { through: RelationshipAddress });
-Address.belongsToMany(Gym, { through: RelationshipAddress });
-
-// Associação entre User e RelationshipAddress (um usuário pode ter muitos endereços)
-User.belongsToMany(Address, { through: RelationshipAddress });
-
-// Associação entre Gym e RelationshipAddress (um centro esportivo pode ter muitos endereços)
-Gym.belongsToMany(Address, { through: RelationshipAddress });
+/*  
+Address.hasMany(RelationshipAddress);
+User.hasMany(RelationshipAddress);
+Gym.hasMany(RelationshipAddress);
 
 RelationshipAddress.sync({ force: true })
   .then(() => {
