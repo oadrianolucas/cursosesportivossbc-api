@@ -1,18 +1,26 @@
 const Program = require("../models/Program")
 const msg = require("../middlewares/msg")
+const moment = require("moment")
 const SeasonsController = {
   PostCreateProgram(req, res) {
-    // Falta validar calculando o time e date para inicar o cadastro.
     const {
       name,
       description,
-      status,
-      startEnrollment,
-      endEnrollment,
-      startMatriculation,
-      endMatriculation,
+      hourEnrollment,
+      dateEnrollment,
+      hourtMatriculation,
+      dateMatriculation,
       seasonId,
     } = req.body
+    const datehourEnrollment = moment(
+      `${dateEnrollment} ${hourEnrollment}`,
+      "YYYY-MM-DD HH:mm:ss"
+    ).format("DD/MM/YYYY HH:mm:ss")
+    const datehourMatriculation = moment(
+      `${dateMatriculation} ${hourtMatriculation}`,
+      "YYYY-MM-DD HH:mm:ss"
+    ).format("DD/MM/YYYY HH:mm:ss")
+
     Program.findOne({ where: { name: name } }).then((program) => {
       if (program != undefined) {
         res.json({ error: msg.error.create_program })
@@ -20,17 +28,15 @@ const SeasonsController = {
         Program.create({
           name,
           description,
-          status,
-          startEnrollment,
-          endEnrollment,
-          startMatriculation,
-          endMatriculation,
+          status: 1,
+          datehourEnrollment,
+          datehourMatriculation,
           seasonId,
         })
           .then(() => {
             res.json({ success: msg.success.create_program })
           })
-          .cath((err) => {
+          .catch((err) => {
             res.json({ error: err })
           })
       }

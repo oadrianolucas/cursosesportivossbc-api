@@ -5,10 +5,8 @@ const Program = db.sequelize.define("programs", {
   name: db.Sequelize.STRING,
   description: db.Sequelize.STRING,
   status: db.Sequelize.INTEGER,
-  startEnrollment: db.Sequelize.STRING,
-  endEnrollment: db.Sequelize.STRING,
-  startMatriculation: db.Sequelize.STRING,
-  endMatriculation: db.Sequelize.STRING,
+  datehourEnrollment: db.Sequelize.STRING,
+  datehourMatriculation: db.Sequelize.STRING,
   seasonId: {
     type: db.Sequelize.INTEGER,
     allowNull: false,

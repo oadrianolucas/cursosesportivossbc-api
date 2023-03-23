@@ -13,7 +13,7 @@ const SeasonsController = {
           .then(() => {
             res.json({ success: msg.success.create_season })
           })
-          .cath((err) => {
+          .catch((err) => {
             res.json({ error: err })
           })
       }
