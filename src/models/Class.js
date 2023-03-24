@@ -2,6 +2,7 @@
 const db = require("../database/db")
 //const Gym = require("../models/Gym");
 //const Season = require("../models/Season");
+//const Course = require("../models/Course");
 const Class = db.sequelize.define("classes", {
   name: db.Sequelize.STRING,
   level: db.Sequelize.STRING,
@@ -14,6 +15,10 @@ const Class = db.sequelize.define("classes", {
     allowNull: false,
   },
   seasonId: {
+    type: db.Sequelize.INTEGER,
+    allowNull: false,
+  },
+  courseId: {
     type: db.Sequelize.INTEGER,
     allowNull: false,
   },

@@ -6,6 +6,8 @@ const programsController = require("./controllers/ProgramsController")
 const addressesController = require("./controllers/AddressesController")
 const gymsController = require("./controllers/GymsController")
 const modalityController = require("./controllers/ModalityController")
+const courseController = require("./controllers/CourseController")
+const classController = require("./controllers/ClassController")
 
 const msg = require("./middlewares/msg")
 const filter = require("./middlewares/filter")
@@ -21,6 +23,8 @@ router.post("/create/gym", gymsController.PostCreatedGym)
 router.post("/create/address/user", addressesController.PostCreateAddressUser)
 router.post("/create/address/gym", addressesController.PostCreateAddressGym)
 router.post("/create/modality", modalityController.PostCreatedModality)
+router.post("/create/course", courseController.PostCreatedModality)
+router.post("/create/class", classController.PostCreatedClass)
 
 router.post(
   "/create/registry",
