@@ -1,13 +1,27 @@
 // Inscrição
 const db = require("../database/db")
-//const Course = require("../models/Course");
-const Enrollment = db.sequelize.define("enrollments", { 
-    hash: db.Sequelize.STRING,
+//const Class = require("../models/Class")
+//const Registry = require("../models/Registry")
+const Enrollment = db.sequelize.define("enrollments", {
+  token: db.Sequelize.STRING,
+  pcd: db.Sequelize.BOOLEAN,
+  cid: db.Sequelize.STRING,
+  cadUnico: db.Sequelize.STRING,
+  status: db.Sequelize.INTEGER,
+  registryId: {
+    type: db.Sequelize.INTEGER,
+  },
+  classId: {
+    type: db.Sequelize.INTEGER,
+  },
 })
 /*
-Enrollment.hasMany(Course)
-Enrollment.sync({force: true}).then(() =>{
-  console.log('Create Enrollment Table')
-}).catch(err => console.log('Err Create Enrollment Table: ' + err))
+Class.hasMany(Enrollment)
+Registry.hasMany(Enrollment)
+Enrollment.sync({ force: true })
+  .then(() => {
+    console.log("Create Enrollment Table")
+  })
+  .catch((err) => console.log("Err Create Enrollment Table: " + err))
 */
 module.exports = Enrollment

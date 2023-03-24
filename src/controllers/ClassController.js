@@ -5,6 +5,8 @@ const ClassController = {
     const {
       name,
       level,
+      dayOne,
+      dayTwo,
       startingAge,
       finalAge,
       sexy,
@@ -12,6 +14,7 @@ const ClassController = {
       amountPcd,
       amountCid,
       amountCadUnico,
+      description,
       gymId,
       modalityId,
     } = req.body
@@ -22,6 +25,8 @@ const ClassController = {
         Class.create({
           name: (name || "").toLowerCase(),
           level,
+          dayOne,
+          dayTwo,
           startingAge,
           finalAge,
           sexy,
@@ -29,6 +34,8 @@ const ClassController = {
           amountPcd,
           amountCid,
           amountCadUnico,
+          amountToken: 0,
+          description: (description || "").toLowerCase(),
           gymId,
           modalityId,
         })
