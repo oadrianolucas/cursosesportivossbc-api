@@ -1,6 +1,5 @@
 const Class = require("../models/Class")
 const msg = require("../middlewares/msg")
-
 const ClassController = {
   PostCreatedClass(req, res) {
     const {
@@ -11,8 +10,7 @@ const ClassController = {
       sexy,
       amount,
       gymId,
-      seasonId,
-      courseId,
+      modalityId,
     } = req.body
     Class.findOne({ where: { name: name } }).then((gym) => {
       if (gym != undefined) {
@@ -26,8 +24,7 @@ const ClassController = {
           sexy,
           amount,
           gymId,
-          seasonId,
-          courseId,
+          modalityId,
         })
           .then(() => {
             res.json({ success: "turma criada com sucesso." })

@@ -3,7 +3,8 @@ const User = require("../models/User")
 const msg = require("../middlewares/msg")
 const RegistriesController = {
   PostCreatedRegistry(req, res) {
-    const { cpf, birth, userId, name, phone, sexy, sus } = req.body
+    const { cpf, birth, userId, name, phone, sexy, sus, pcd, cadUnico } =
+      req.body
     Registry.findOne({ where: { cpf: cpf } }).then((registry) => {
       if (registry != undefined) {
         res.json({ error: msg.error.cpf_found })
@@ -30,6 +31,8 @@ const RegistriesController = {
                   sexy: (sexy || "").toLowerCase(),
                   cpf,
                   sus,
+                  pcd,
+                  cadUnico,
                   userId,
                 })
                   .then(() => {

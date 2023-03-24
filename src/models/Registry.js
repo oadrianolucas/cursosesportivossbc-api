@@ -20,6 +20,12 @@ const Registry = db.sequelize.define("registries", {
   sus: {
     type: db.Sequelize.STRING,
   },
+  pcd: {
+    type: db.Sequelize.BOOLEAN,
+  },
+  cadUnico: {
+    type: db.Sequelize.STRING,
+  },
   userId: {
     type: db.Sequelize.INTEGER,
     allowNull: false,
