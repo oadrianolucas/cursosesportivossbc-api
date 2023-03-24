@@ -9,6 +9,9 @@ const ClassController = {
       finalAge,
       sexy,
       amount,
+      amountPcd,
+      amountCid,
+      amountCadUnico,
       gymId,
       modalityId,
     } = req.body
@@ -23,6 +26,9 @@ const ClassController = {
           finalAge,
           sexy,
           amount,
+          amountPcd,
+          amountCid,
+          amountCadUnico,
           gymId,
           modalityId,
         })

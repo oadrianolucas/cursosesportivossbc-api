@@ -10,6 +10,7 @@ const Class = db.sequelize.define("classes", {
   sexy: db.Sequelize.STRING,
   amount: db.Sequelize.INTEGER,
   amountPcd: db.Sequelize.INTEGER,
+  amountCid: db.Sequelize.INTEGER,
   amountCadUnico: db.Sequelize.INTEGER,
   gymId: {
     type: db.Sequelize.INTEGER,

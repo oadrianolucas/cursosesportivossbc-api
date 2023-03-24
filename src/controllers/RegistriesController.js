@@ -64,6 +64,8 @@ const RegistriesController = {
                 sexy: (sexy || "").toLowerCase(),
                 cpf,
                 sus,
+                pcd,
+                cadUnico,
                 userId,
               })
                 .then(() => {
