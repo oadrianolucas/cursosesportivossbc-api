@@ -5,6 +5,7 @@ const seasonsController = require("./controllers/SeasonsController")
 const programsController = require("./controllers/ProgramsController")
 const addressesController = require("./controllers/AddressesController")
 const gymsController = require("./controllers/GymsController")
+const modalityController = require("./controllers/ModalityController")
 
 const msg = require("./middlewares/msg")
 const filter = require("./middlewares/filter")
@@ -19,6 +20,7 @@ router.post("/create/program", programsController.PostCreateProgram)
 router.post("/create/gym", gymsController.PostCreatedGym)
 router.post("/create/address/user", addressesController.PostCreateAddressUser)
 router.post("/create/address/gym", addressesController.PostCreateAddressGym)
+router.post("/create/modality", modalityController.PostCreatedModality)
 
 router.post(
   "/create/registry",

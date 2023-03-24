@@ -1,7 +1,7 @@
 const db = require("../database/db")
 //const Course = require("../models/Course");
-const AdminCourse = db.sequelize.define("adminsCourses", { 
-    level: db.Sequelize.INTEGER
+const AdminCourse = db.sequelize.define("adminsCourses", {
+  level: db.Sequelize.INTEGER,
 })
 /*
 Course.hasMany(AdminCourse)

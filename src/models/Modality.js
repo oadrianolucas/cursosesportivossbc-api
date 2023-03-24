@@ -1,9 +1,13 @@
 // Modalidades
 const db = require("../database/db")
 //const Program = require("../models/Program");
-const Modality = db.sequelize.define("modalities", { 
-    name: db.Sequelize.STRING,
-    description: db.Sequelize.STRING
+const Modality = db.sequelize.define("modalities", {
+  name: db.Sequelize.STRING,
+  description: db.Sequelize.STRING,
+  programId: {
+    type: db.Sequelize.INTEGER,
+    allowNull: false,
+  },
 })
 /*
 Program.hasMany(Modality)
