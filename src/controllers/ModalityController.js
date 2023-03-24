@@ -2,7 +2,7 @@ const Modality = require("../models/Modality")
 const msg = require("../middlewares/msg")
 
 const ModalityController = {
-  PostCreatedModality(req, res) {
+  PostCreateModality(req, res) {
     const { name, description, programId } = req.body
     Modality.findOne({ where: { name: name } }).then((gym) => {
       if (gym != undefined) {

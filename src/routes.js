@@ -21,8 +21,8 @@ router.post("/create/program", programsController.PostCreateProgram)
 router.post("/create/gym", gymsController.PostCreatedGym)
 router.post("/create/address/user", addressesController.PostCreateAddressUser)
 router.post("/create/address/gym", addressesController.PostCreateAddressGym)
-router.post("/create/modality", modalityController.PostCreatedModality)
-router.post("/create/class", classController.PostCreatedClass)
+router.post("/create/modality", modalityController.PostCreateModality)
+router.post("/create/class", classController.PostCreateClass)
 
 router.post(
   "/create/registry",

@@ -1,7 +1,7 @@
 const Class = require("../models/Class")
 const msg = require("../middlewares/msg")
 const ClassController = {
-  PostCreatedClass(req, res) {
+  PostCreateClass(req, res) {
     const {
       name,
       level,
