@@ -1,38 +1,63 @@
-const RelationshipAddress = require("../models/RelationshipAddress")
+const UserAddress = require("../models/UserAddress")
+const GymAddress = require("../models/GymAddress")
+
 const Address = require("../models/Address")
 const AddressesController = {
-  PostCreateAddress(req, res) {
-    const { name, cep, district, city, number, complement, userId, gymId } =
+  PostCreateAddressUser(req, res) {
+    const { name, cep, district, city, number, complement, state, userId } =
       req.body
     Address.create({
-      name,
+      name: (name || "").toLowerCase(),
       cep,
-      district,
-      city,
+      district: (district || "").toLowerCase(),
+      city: (city || "").toLowerCase(),
+      state: (state || "").toLowerCase(),
       number,
-      complement,
+      complement: (complement || "").toLowerCase(),
     })
       .then((address) => {
-        if (userId && gymId) {
-          res.json({
-            error:
-              "O endereço só deverar ser cadastrado ou para um usuário ou para um centro esportivo.",
-          })
-        } else {
-          RelationshipAddress.create({
-            userId,
-            gymId,
-            addressId: address.id,
-          })
-            .then(() => {
-              res.json({
-                success: "Endereço criado com sucesso.",
-              })
+        UserAddress.create({
+          userId,
+          addressId: address.id,
+        })
+          .then(() => {
+            res.json({
+              success: "Endereço criado com sucesso.",
             })
-            .catch((err) => {
-              res.json({ error: err })
+          })
+          .catch((err) => {
+            res.json({ error: err })
+          })
+      })
+      .catch((err) => {
+        res.json({ error: err })
+      })
+  },
+  PostCreateAddressGym(req, res) {
+    const { name, cep, district, city, number, complement, state, gymId } =
+      req.body
+    Address.create({
+      name: (name || "").toLowerCase(),
+      cep,
+      district: (district || "").toLowerCase(),
+      city: (city || "").toLowerCase(),
+      state: (state || "").toLowerCase(),
+      number,
+      complement: (complement || "").toLowerCase(),
+    })
+      .then((address) => {
+        GymAddress.create({
+          gymId,
+          addressId: address.id,
+        })
+          .then(() => {
+            res.json({
+              success: "Endereço criado com sucesso.",
             })
-        }
+          })
+          .catch((err) => {
+            res.json({ error: err })
+          })
       })
       .catch((err) => {
         res.json({ error: err })

@@ -26,8 +26,8 @@ const SeasonsController = {
         res.json({ error: msg.error.create_program })
       } else {
         Program.create({
-          name,
-          description,
+          name: (name || "").toLowerCase(),
+          description: (description || "").toLowerCase(),
           status: 1,
           datehourEnrollment,
           datehourMatriculation,

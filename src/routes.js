@@ -17,7 +17,9 @@ router.get("/dashboard", usersController.GetFindAllUsers)
 router.post("/create/season", seasonsController.PostCreateSeason)
 router.post("/create/program", programsController.PostCreateProgram)
 router.post("/create/gym", gymsController.PostCreatedGym)
-router.post("/create/address", addressesController.PostCreateAddress)
+router.post("/create/address/user", addressesController.PostCreateAddressUser)
+router.post("/create/address/gym", addressesController.PostCreateAddressGym)
+
 router.post(
   "/create/registry",
   filter,

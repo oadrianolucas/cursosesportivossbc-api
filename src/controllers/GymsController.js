@@ -9,7 +9,7 @@ const GymsController = {
         res.json({ error: "centro esportivo já foi criado." })
       } else {
         Gym.create({
-          name,
+          name: (name || "").toLowerCase(),
         })
           .then(() => {
             res.json({ success: "centro esportivo criado com sucesso." })
