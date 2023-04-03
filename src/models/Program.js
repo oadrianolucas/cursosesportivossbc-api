@@ -7,8 +7,6 @@ const Program = db.sequelize.define("programs", {
   name: db.Sequelize.STRING,
   description: db.Sequelize.STRING,
   status: db.Sequelize.INTEGER,
-  datehourEnrollment: db.Sequelize.STRING,
-  datehourMatriculation: db.Sequelize.STRING,
   seasonId: {
     type: db.Sequelize.INTEGER,
     allowNull: false,

@@ -21,19 +21,16 @@ router.post("/reset/password", usersController.PostResetPasswordEmail)
 router.get("/dashboard", usersController.GetFindAllUsers)
 router.post("/create/season", seasonsController.PostCreateSeason)
 router.post("/create/program", programsController.PostCreateProgram)
-router.post("/create/gym", gymsController.PostCreatedGym)
+router.post("/create/gym", gymsController.PostCreateGym)
 router.post("/create/address/user", addressesController.PostCreateAddressUser)
 router.post("/create/address/gym", addressesController.PostCreateAddressGym)
 router.post("/create/modality", modalityController.PostCreateModality)
 router.post("/create/class", classController.PostCreateClass)
 router.post("/create/enrollment", enrollmentController.PostCreateEnrollment)
 router.post("/create/token/class", tokenClass.PostCreateTokenClass)
+router.post("/create/institute", institutesController.PostCreateInstitute)
 
-router.post(
-  "/create/registry",
-  filter,
-  registriesController.PostCreatedRegistry
-)
+router.post("/create/registry", filter, registriesController.PostCreateRegistry)
 router.get("/", (req, res) => {
   res.status(200).json({ success: msg.success.on })
 })

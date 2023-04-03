@@ -1,12 +1,14 @@
 const Class = require("../models/Class")
 const msg = require("../middlewares/msg")
+const moment = require("moment")
 const ClassController = {
   PostCreateClass(req, res) {
     const {
       name,
       level,
-      dayOne,
-      dayTwo,
+      period,
+      hour,
+      dayOption,
       startingAge,
       finalAge,
       sexy,
@@ -15,6 +17,10 @@ const ClassController = {
       amountCid,
       amountCadUnico,
       description,
+      dateEnrollment,
+      hourEnrollment,
+      dateMatriculation,
+      hourMatriculation,
       gymId,
       modalityId,
     } = req.body
@@ -22,11 +28,21 @@ const ClassController = {
       if (gym != undefined) {
         res.json({ error: "turma já foi criado." })
       } else {
+        const datehourEnrollment = moment(
+          `${dateEnrollment} ${hourEnrollment}`,
+          "YYYY-MM-DD HH:mm:ss"
+        ).format("DD/MM/YYYY HH:mm:ss")
+        const datehourMatriculation = moment(
+          `${dateMatriculation} ${hourMatriculation}`,
+          "YYYY-MM-DD HH:mm:ss"
+        ).format("DD/MM/YYYY HH:mm:ss")
+
         Class.create({
           name: (name || "").toLowerCase(),
           level,
-          dayOne,
-          dayTwo,
+          period,
+          hour,
+          dayOption,
           startingAge,
           finalAge,
           sexy,
@@ -36,6 +52,8 @@ const ClassController = {
           amountCadUnico,
           amountToken: 0,
           description: (description || "").toLowerCase(),
+          startingDateHourEnrollment: datehourEnrollment,
+          finalDateHourMatriculation: datehourMatriculation,
           gymId,
           modalityId,
         })

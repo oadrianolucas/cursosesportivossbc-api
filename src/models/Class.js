@@ -5,8 +5,9 @@ const db = require("../database/db")
 const Class = db.sequelize.define("classes", {
   name: db.Sequelize.STRING,
   level: db.Sequelize.STRING,
-  dayOne: db.Sequelize.STRING,
-  dayTwo: db.Sequelize.STRING,
+  period: db.Sequelize.STRING,
+  hour: db.Sequelize.STRING,
+  dayOption: db.Sequelize.STRING,
   startingAge: db.Sequelize.INTEGER,
   finalAge: db.Sequelize.INTEGER,
   sexy: db.Sequelize.STRING,
@@ -16,6 +17,8 @@ const Class = db.sequelize.define("classes", {
   amountCadUnico: db.Sequelize.INTEGER,
   amountToken: db.Sequelize.INTEGER,
   description: db.Sequelize.STRING,
+  startingDateHourEnrollment: db.Sequelize.STRING,
+  finalDateHourMatriculation: db.Sequelize.STRING,
   gymId: {
     type: db.Sequelize.INTEGER,
     allowNull: false,

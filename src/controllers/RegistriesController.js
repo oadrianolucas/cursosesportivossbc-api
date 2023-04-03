@@ -2,7 +2,7 @@ const Registry = require("../models/Registry")
 const User = require("../models/User")
 const msg = require("../middlewares/msg")
 const RegistriesController = {
-  PostCreatedRegistry(req, res) {
+  PostCreateRegistry(req, res) {
     const { cpf, birth, userId, name, phone, sexy, sus, pcd, cadUnico } =
       req.body
     Registry.findOne({ where: { cpf: cpf } }).then((registry) => {

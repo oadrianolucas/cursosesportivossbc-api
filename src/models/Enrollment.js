@@ -8,6 +8,7 @@ const Enrollment = db.sequelize.define("enrollments", {
   cid: db.Sequelize.STRING,
   cadUnico: db.Sequelize.STRING,
   status: db.Sequelize.INTEGER,
+  hash: db.Sequelize.STRING,
   registryId: {
     type: db.Sequelize.INTEGER,
   },

@@ -2,7 +2,7 @@ const Gym = require("../models/Gym")
 const msg = require("../middlewares/msg")
 
 const GymsController = {
-  PostCreatedGym(req, res) {
+  PostCreateGym(req, res) {
     const { name } = req.body
     Gym.findOne({ where: { name: name } }).then((gym) => {
       if (gym != undefined) {
