@@ -8,6 +8,7 @@ const gymsController = require("./controllers/GymsController")
 const modalityController = require("./controllers/ModalityController")
 const classController = require("./controllers/ClassController")
 const enrollmentController = require("./controllers/EnrollmentController")
+const institutesController = require("./controllers/InstitutesController")
 const tokenClass = require("./controllers/TokenClass")
 
 const msg = require("./middlewares/msg")

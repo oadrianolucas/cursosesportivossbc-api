@@ -1,6 +1,8 @@
 // Programas Esportivos
 const db = require("../database/db")
 //const Season = require("../models/Season")
+//const Institute = require("../models/Institute")
+
 const Program = db.sequelize.define("programs", {
   name: db.Sequelize.STRING,
   description: db.Sequelize.STRING,
@@ -11,9 +13,15 @@ const Program = db.sequelize.define("programs", {
     type: db.Sequelize.INTEGER,
     allowNull: false,
   },
+  instituteId: {
+    type: db.Sequelize.INTEGER,
+    allowNull: false,
+  },
 })
 /*
 Season.hasMany(Program)
+Institute.hasMany(Program)
+
 Program.sync({ force: true })
   .then(() => {
     console.log("Create Program Table")
