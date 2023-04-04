@@ -1,6 +1,6 @@
 // Modalidades
 const db = require("../database/db")
-//const Program = require("../models/Program");
+//const Program = require("../models/Program")
 const Modality = db.sequelize.define("modalities", {
   name: db.Sequelize.STRING,
   description: db.Sequelize.STRING,
@@ -11,8 +11,10 @@ const Modality = db.sequelize.define("modalities", {
 })
 /*
 Program.hasMany(Modality)
-Modality.sync({force: true}).then(() =>{
-  console.log('Create Modality Table')
-}).catch(err => console.log('Err Create Modality Table: ' + err))
+Modality.sync({ force: true })
+  .then(() => {
+    console.log("Create Modality Table")
+  })
+  .catch((err) => console.log("Err Create Modality Table: " + err))
 */
 module.exports = Modality

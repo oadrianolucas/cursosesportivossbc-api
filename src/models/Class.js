@@ -30,7 +30,7 @@ const Class = db.sequelize.define("classes", {
 })
 /*
 Gym.hasMany(Class)
-Modality.hasMany(Class)
+Class.belongsTo(Modality)
 Class.sync({ force: true })
   .then(() => {
     console.log("Create Class Table")
