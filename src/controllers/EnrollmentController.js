@@ -7,18 +7,34 @@ const Registry = require("../models/Registry")
 const User = require("../models/User")
 const Enrollment = require("../models/Enrollment")
 const sequelize = require("sequelize")
+const moment = require("moment")
+
 /* 
+  Status == 5 -> Fila de espera
+  Status == 4 -> Se o registry já concluiu um curso
+    exemplo: terminou natação nivel inicial.
+      e se ele n tiver capacidade de anvançar???? como fazemos isso?
+        Ele simplesmente não atualiza no sistema essa opção
   Status == 3 -> Inscrição
   Status == 2 -> Cancelada
   Status == 1 -> Matriculado
   Status == 0 -> Multa de 6 meses
-*/
 
-// Falta validar o Status == 4 -> Curso efetuado com sucesso, para criar Enrollment
+  Erro na hora de criar um Enrollment, pelo fato de verificar se amount ou amountRow for igual a 0 para não poder cadastrar.
+*/
 
 const EnrollmentController = {
   PostCreateEnrollment(req, res) {
-    const { token, pcd, cid, cadUnico, registryId, classId, userId } = req.body
+    const {
+      token,
+      pcd,
+      cid,
+      cadUnico,
+      registryId,
+      classId,
+      userId,
+      description,
+    } = req.body
     async function createEnrollment() {
       try {
         const user = await User.findByPk(userId)
@@ -68,7 +84,7 @@ const EnrollmentController = {
           },
         })
 
-        if (existingEnrollments.length < 0) {
+        if (existingEnrollments.length > 0) {
           const hasEnrollmentWithStatusZero = existingEnrollments.some(
             (enrollment) => enrollment.status === 0
           )
@@ -92,6 +108,42 @@ const EnrollmentController = {
               error: "Já existe uma inscrição para essa modalidade e registro",
             })
           }
+        }
+
+        const existingEnrollmentWithStatusTwo = await Enrollment.findOne({
+          where: {
+            registryId,
+            classId,
+            status: 2,
+          },
+        })
+        if (existingEnrollmentWithStatusTwo) {
+          const enrollmentsWithStatusOneOrThree = await Enrollment.count({
+            where: {
+              registryId,
+              status: {
+                [Op.or]: [1, 3],
+              },
+            },
+          })
+
+          if (enrollmentsWithStatusOneOrThree >= 3) {
+            return res.json({
+              error:
+                "Não é possível atualizar a inscrição, pois já existem 3 ou mais inscrições com status 'Inscrito' ou 'Matriculado'.",
+            })
+          }
+
+          const dateUpdate =
+            "Inscrição atualizada em: " + moment().format("DD/MM/YYYY")
+          const oldDescription = existingEnrollmentWithStatusTwo.description
+          const updatedDescription =
+            oldDescription + " | " + dateUpdate + " Motivo: " + description
+          await Enrollment.update(
+            { status: 3, description: updatedDescription },
+            { where: { id: existingEnrollmentWithStatusTwo.id } }
+          )
+          return res.json({ success: "Inscrição atualizada com sucesso." })
         }
 
         const existingEnrollment = await Enrollment.findOne({
@@ -131,8 +183,7 @@ const EnrollmentController = {
             where: {
               registryId,
               status: {
-                [Op.ne]: 2,
-                [Op.lt]: 3,
+                [Op.notIn]: [2],
               },
               createdAt: {
                 [Op.between]: [
@@ -154,8 +205,7 @@ const EnrollmentController = {
             where: {
               registryId,
               status: {
-                [Op.ne]: 2,
-                [Op.lt]: 3,
+                [Op.notIn]: [2],
               },
               createdAt: {
                 [Op.between]: [
@@ -177,8 +227,7 @@ const EnrollmentController = {
             where: {
               registryId,
               status: {
-                [Op.ne]: 2,
-                [Op.lt]: 3,
+                [Op.notIn]: [2],
               },
               createdAt: {
                 [Op.between]: [
@@ -195,6 +244,8 @@ const EnrollmentController = {
           })
         }
 
+        const dateCreate =
+          "Inscrição criada em: " + moment().format("DD/MM/YYYY")
         let bodyEnrollment = {
           token: 0,
           cid: 0,
@@ -202,31 +253,52 @@ const EnrollmentController = {
           pcd: 0,
           status: 3,
           hash: hash,
+          description: dateCreate,
           registryId,
           classId,
         }
-        let bodyClass = {}
 
+        let bodyClass = {}
         if (pcd !== undefined) {
           bodyEnrollment.pcd = pcd
           bodyClass.amountPcd = enrolledClass.amountPcd - 1
+          bodyClass.amountPcdTotal = enrolledClass.amountPcdTotal + 1
         } else if (cid !== undefined) {
           bodyEnrollment.cid = cid
-          bodyClass.amountCid = enrolledClass.amountCid - 1
+          bodyClass.amountCidTotal = enrolledClass.amountCid - 1
+          bodyClass.amouamountCidTotalntCid = enrolledClass.amountCidTotal + 1
         } else if (cadUnico !== undefined) {
           bodyEnrollment.cadUnico = cadUnico
           bodyClass.amountCadUnico = enrolledClass.amountCadUnico - 1
+          bodyClass.amountCadUnicoTotal = enrolledClass.amountCadUnicoTotal - 1
         } else if (token !== undefined) {
           bodyEnrollment.token = token
           bodyClass.amountToken = enrolledClass.amountToken + 1
         } else {
           bodyClass.amount = enrolledClass.amount - 1
+          bodyClass.amountTotal = enrolledClass.amountTotal + 1
+        }
+        if (enrolledClass.amount === 0) {
+          bodyClass.amountRow = enrolledClass.amountRow - 1
+          bodyClass.amount = enrolledClass.amount + 1 - 1
+        }
+        if (enrolledClass.amountPcd === 0) {
+          bodyClass.amountPcdRow = enrolledClass.amountPcdRow - 1
+          bodyClass.amountPcd = enrolledClass.amountPcd + 1 - 1
+        }
+        if (enrolledClass.amountCid === 0) {
+          bodyClass.amountCidRow = enrolledClass.amountCidRow - 1
+          bodyClass.amountCid = enrolledClass.amountCid + 1 - 1
+        }
+        if (enrolledClass.amountCadUnico === 0) {
+          bodyClass.amountCadUnicoRow = enrolledClass.amountCadUnicoRow - 1
+          bodyClass.amountCadUnico = enrolledClass.amountCadUnico + 1 - 1
         }
         if (
-          bodyClass.amount == -1 ||
-          bodyClass.amountPcd == -1 ||
-          bodyClass.amountCadUnico == -1 ||
-          bodyClass.amountCid == -1
+          enrolledClass.amountRow === 0 &&
+          enrolledClass.amountPcdRow === 0 &&
+          enrolledClass.amountCidRow === 0 &&
+          enrolledClass.amountCadUnicoRow === 0
         ) {
           res.json({ error: "Quantidade disponível insuficiente." })
         } else {
