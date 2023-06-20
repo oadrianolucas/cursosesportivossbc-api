@@ -1,16 +1,17 @@
 const Sequelize = require("sequelize")
-const sequelize = new Sequelize("cesbc", "root", "root", {
+const sequelize = new Sequelize("cursosesportivos", "root", "root", {
   host: "localhost",
   dialect: "mysql",
-  port: "3366"
+  port: "3308",
 })
 
-module.exports = { 
+module.exports = {
   sequelize: sequelize,
   Sequelize: Sequelize,
 }
 
-sequelize.authenticate()
+sequelize
+  .authenticate()
   .then(() => {
     console.log("Conexão realizada com sucesso ao banco de dados")
   })

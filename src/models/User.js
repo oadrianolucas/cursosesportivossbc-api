@@ -19,10 +19,10 @@ const User = db.sequelize.define("users", {
   },
 })
 
-/*
-User.sync({force: true}).then(() =>{
-  console.log('Create User Table')
-}).catch(err => console.log('Err Create User Table: ' + err))
-*/
+// User.sync({ force: true })
+//   .then(() => {
+//     console.log("Create User Table")
+//   })
+//   .catch((err) => console.log("Err Create User Table: " + err))
 
 module.exports = User

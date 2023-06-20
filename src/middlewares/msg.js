@@ -5,7 +5,7 @@ const status = {
       "Conta criada com sucesso, enviamos um e-mail para você ativar a conta, verifique o 'SPAM'.",
     email_password_confirm: "Parabéns, sua conta esta ativa.",
     login: "Login efetuado com sucesso.",
-    create_registry: "Registro efetuado com sucesso.",
+    create_registry: "Registro criado com sucesso.",
     create_season: "Temporada criada com sucesso.",
     create_program: "Programa criado com sucesso.",
   },
@@ -21,7 +21,7 @@ const status = {
     biggerorequal18:
       "O primeiro registro deve ser feito por uma pessoa com idade igual ou superior a 18 anos.",
     cpf_found: "Cpf já cadastrado na plataforma.",
-    user_not_found: "Usuário não encotrado.",
+    user_not_found: "E-mail inválido ou não encontrado.",
     create_season: "Ano de temporada já está criado.",
     create_program: "Programa já existe.",
   },

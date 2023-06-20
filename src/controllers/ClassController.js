@@ -1,4 +1,6 @@
 const Class = require("../models/Class")
+const SchoolCall = require("../models/SchoolCall")
+
 const msg = require("../middlewares/msg")
 const moment = require("moment")
 const ClassController = {

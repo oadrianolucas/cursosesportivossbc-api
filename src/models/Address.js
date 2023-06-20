@@ -9,11 +9,11 @@ const Address = db.sequelize.define("addresses", {
   number: db.Sequelize.STRING,
   complement: db.Sequelize.STRING,
 })
-/*=
-Address.sync({ force: true })
-  .then(() => {
-    console.log("Create Address Table")
-  })
-  .catch((err) => console.log("Err Create Address Table: " + err))
-*/
+
+// Address.sync({ force: true })
+//   .then(() => {
+//     console.log("Create Address Table")
+//   })
+//   .catch((err) => console.log("Err Create Address Table: " + err))
+
 module.exports = Address

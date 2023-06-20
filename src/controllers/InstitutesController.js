@@ -1,4 +1,6 @@
 const Institute = require("../models/Institute")
+const InstituteAddress = require("../models/InstituteAddress")
+
 const msg = require("../middlewares/msg")
 
 const InstitutesController = {

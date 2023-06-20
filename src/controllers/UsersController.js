@@ -1,19 +1,21 @@
 const User = require("../models/User")
+const AdminCourse = require("../models/AdminCourse")
 const msg = require("../middlewares/msg")
 const nodemailer = require("../middlewares/nodemailer")
 const crypto = require("crypto")
 const bcrypt = require("bcryptjs")
+const jwt = require("jsonwebtoken")
+const secretKey = "superSecretKey"
 
 const UsersController = {
   PostSingUp(req, res) {
-    const email = req.body.email
-    const password = req.body.password
+    const { email, password } = req.body
     const salt = bcrypt.genSaltSync(10)
     const hash = bcrypt.hashSync(password, salt)
     const token = crypto.randomBytes(2).toString("hex")
     User.findOne({ where: { email: email } }).then((user) => {
       if (user != undefined) {
-        res.json({ error: msg.error.email })
+        res.status(500).json({ error: msg.error.email })
       } else {
         User.create({
           email: email,
@@ -24,15 +26,14 @@ const UsersController = {
         })
           .then(() => {
             nodemailer.emailConfirm(email, token)
-            res.json({ success: msg.success.create_user })
+            res.status(200).json({ success: msg.success.create_user })
           })
           .catch((err) => {
-            res.json({ error: err })
+            res.status(500).json({ error: err })
           })
       }
     })
   },
-
   PostEmailToken(req, res) {
     const email = req.body.email
     const token = req.body.token
@@ -59,7 +60,25 @@ const UsersController = {
       }
     })
   },
-
+  PostAlterFilter(req, res) {
+    const { id, filter } = req.body
+    User.findOne({ where: { id: id } })
+      .then((user) => {
+        if (!user) {
+          return res.status(404).json({ error: "Usuário não encontrado." })
+        }
+        User.update({ filter: filter }, { where: { id } })
+          .then(() => {
+            res.status(200).json({ success: "Filtro alterado com sucesso." })
+          })
+          .catch((error) => {
+            res.status(500).json({ error: "Erro ao atualizar o filtro." })
+          })
+      })
+      .catch((error) => {
+        res.status(500).json({ error: "Erro ao buscar o usuário." })
+      })
+  },
   PostResetPasswordEmail(req, res) {
     const email = req.body.email
     const token = crypto.randomBytes(2).toString("hex")
@@ -87,7 +106,6 @@ const UsersController = {
       }
     })
   },
-
   PostResetPassword(req, res) {
     const id = req.body.id
     const password = req.body.password
@@ -116,39 +134,106 @@ const UsersController = {
       res.json(msg.error)
     }
   },
-
-  GetFindAllUsers(req, res) {
-    User.findAll().then((users) => {
-      res.json({
-        users: users.map((users) => users.toJSON()),
-      })
-    })
-  },
-
   PostLogin(req, res) {
     const email = req.body.email
     const password = req.body.password
+
     User.findOne({ where: { email: email } }).then((user) => {
       if (user != undefined) {
         const correct = bcrypt.compareSync(password, user.password)
-        const token = user.token
+        const emailConfirmationToken = user.token
+
         if (correct) {
-          req.session.user = {
-            email: user.email,
-            token: user.token,
-          }
-          if (token == null) {
-            res.json({ sucess: msg.success })
+          if (emailConfirmationToken == null) {
+            const auth = jwt.sign({ email }, secretKey, { expiresIn: "1h" })
+            req.session.user = {
+              id: user.id,
+              email: user.email,
+              auth: auth,
+            }
+            res.status(200).json({ success: msg.success.login, auth: auth })
           } else {
-            res.json({ error: msg.error })
+            res.status(403).json({ error: msg.error.user_not_confirm_email })
           }
         } else {
-          res.json({ error: msg.error })
+          res.status(401).json({ error: msg.error.password_invalid })
         }
       } else {
-        res.json({ error: msg.error })
+        res.status(404).json({ error: msg.error.user_not_found })
       }
     })
+  },
+  GetFindAllUsers(req, res) {
+    User.count()
+      .then((count) => {
+        res.status(200).json({
+          users: count,
+        })
+      })
+      .catch((err) => {
+        res.status(500).json({
+          error: err.message,
+        })
+      })
+  },
+  GetFindUsers(req, res) {
+    const page = req.query.page ? parseInt(req.query.page) : 1
+    const pageSize = 10
+    User.findAndCountAll({
+      limit: pageSize,
+      offset: (page - 1) * pageSize,
+    })
+      .then((result) => {
+        const pageCount = Math.ceil(result.count / pageSize)
+
+        res.status(200).json({
+          users: result.rows.map((user) => user.toJSON()),
+          totalPages: pageCount,
+          currentPage: page,
+        })
+      })
+      .catch((err) => {
+        res.status(500).json({ error: err.message })
+      })
+  },
+  GetFindUser(req, res) {
+    const id = req.params.id
+    User.findByPk(id)
+      .then((user) => {
+        if (!user) {
+          return res.status(404).json({ error: "Usuário não encontrado" })
+        }
+        res.status(200).json({
+          user: user.toJSON(),
+        })
+      })
+      .catch((err) => {
+        res.status(500).json({ error: err.message })
+      })
+  },
+  GetFilterUsers(req, res) {
+    const email = req.params.email
+    const page = req.query.page ? parseInt(req.query.page) : 1
+    const pageSize = 10
+    const whereClause = email ? { email: email } : {}
+
+    User.findAndCountAll({
+      where: whereClause,
+      limit: pageSize,
+      offset: (page - 1) * pageSize,
+    })
+      .then((result) => {
+        const pageCount = Math.ceil(result.count / pageSize)
+
+        res.status(200).json({
+          users: result.rows.map((user) => user.toJSON()),
+          totalPages: pageCount,
+          currentPage: page,
+        })
+      })
+      .catch((err) => {
+        res.status(500).json({ error: err.message })
+      })
   },
 }
 
