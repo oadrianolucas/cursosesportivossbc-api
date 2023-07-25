@@ -2,8 +2,8 @@ const { json } = require("body-parser")
 const mailer = require("nodemailer")
 const status = require("./msg")
 
-const userEmail = "estell66@ethereal.email"
-const passwordEmail = "Dsh7yK4mxdM76FJMj5"
+const userEmail = "augustine.gulgowski92@ethereal.email"
+const passwordEmail = "Pn29dhKMbMfgf3Z9zh"
 
 const tranporter = mailer.createTransport({
   host: "smtp.ethereal.email",

@@ -32,7 +32,7 @@ router.post("/create/registry", filter, registriesController.PostCreateRegistry)
 router.post("/alter/filter/user", usersController.PostAlterFilter)
 router.get("/search/users/:email", usersController.GetFilterUsers)
 router.get("/total/users", usersController.GetFindAllUsers)
-router.get("/users", filter, usersController.GetFindUsers)
+router.get("/users", usersController.GetFindUsers)
 router.get("/user/:id", usersController.GetFindUser)
 
 router.get("/", (req, res) => {

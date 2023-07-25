@@ -1,6 +1,6 @@
 // Registros
 const db = require("../database/db")
-// const User = require("../models/User")
+const User = require("../models/User")
 const Registry = db.sequelize.define("registries", {
   name: {
     type: db.Sequelize.STRING,
