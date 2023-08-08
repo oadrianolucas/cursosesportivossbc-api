@@ -20,7 +20,7 @@ const GymsController = {
     Gym.findOne({ where: { name: name } })
       .then((existingGym) => {
         if (existingGym) {
-          res.json({ error: "Centro esportivo já foi criado." })
+          res.status(500).json({ error: "Centro esportivo já foi criado." })
         } else {
           Gym.create({
             name: (name || "").toLowerCase(),
@@ -43,7 +43,9 @@ const GymsController = {
                   })
                 })
                 .then(() => {
-                  res.json({ success: "Centro esportivo criado com sucesso." })
+                  res
+                    .status(200)
+                    .json({ success: "Centro esportivo criado com sucesso." })
                 })
                 .catch((err) => {
                   res.status(500).json({
