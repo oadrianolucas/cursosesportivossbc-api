@@ -276,6 +276,10 @@ const UsersController = {
         res.status(500).json({ error: err.message })
       })
   },
+  PostLogoutUser(req, res) {
+    req.session.user = undefined
+    res.redirect("/")
+  },
 }
 
 module.exports = UsersController

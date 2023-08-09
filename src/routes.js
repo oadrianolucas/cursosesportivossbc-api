@@ -15,6 +15,7 @@ const msg = require("./middlewares/msg")
 const filter = require("./middlewares/filter")
 
 router.post("/signup", usersController.PostSingUp)
+router.post("/logout", usersController.PostLogoutUser)
 router.post("/login", usersController.PostLogin)
 router.post("/email/token", usersController.PostEmailToken)
 router.post("/reset/password", usersController.PostResetPasswordEmail)

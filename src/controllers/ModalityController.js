@@ -33,7 +33,7 @@ const ModalityController = {
         const pageCount = Math.ceil(result.count / pageSize)
         if (result.count === 0) {
           res.status(200).json({
-            notfound: "Não existe usuários na base de dados",
+            notfound: "Não existe modalidades na base de dados",
           })
         } else {
           res.status(200).json({
