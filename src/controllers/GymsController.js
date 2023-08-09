@@ -20,7 +20,7 @@ const GymsController = {
     Gym.findOne({ where: { name: name } })
       .then((existingGym) => {
         if (existingGym) {
-          res.status(500).json({ error: "Centro esportivo já foi criado." })
+          res.status(409).json({ error: "Centro esportivo já foi criado." })
         } else {
           Gym.create({
             name: (name || "").toLowerCase(),
@@ -78,25 +78,35 @@ const GymsController = {
         const pageCount = Math.ceil(result.count / pageSize)
         const gyms = result.rows
         const gymsWithAddresses = []
-        for (const gym of gyms) {
-          const gymData = gym.toJSON()
-          const address = await GymAddress.findOne({ where: { gymId: gym.id } })
 
-          if (address) {
-            const addressData = await Address.findOne({
-              where: { id: address.addressId },
+        if (result.count === 0) {
+          res.status(200).json({
+            notfound: "Não existem academias na base de dados",
+          })
+        } else {
+          for (const gym of gyms) {
+            const gymData = gym.toJSON()
+            const address = await GymAddress.findOne({
+              where: { gymId: gym.id },
             })
-            if (addressData) {
-              gymData.Address = addressData.toJSON()
+
+            if (address) {
+              const addressData = await Address.findOne({
+                where: { id: address.addressId },
+              })
+              if (addressData) {
+                gymData.Address = addressData.toJSON()
+              }
             }
+            gymsWithAddresses.push(gymData)
           }
-          gymsWithAddresses.push(gymData)
+
+          res.status(200).json({
+            gyms: gymsWithAddresses,
+            totalPages: pageCount,
+            currentPage: page,
+          })
         }
-        res.status(200).json({
-          gyms: gymsWithAddresses,
-          totalPages: pageCount,
-          currentPage: page,
-        })
       })
       .catch((err) => {
         res.status(500).json({ error: err.message })

@@ -164,11 +164,44 @@ const UsersController = {
     })
   },
   GetFindAllUsers(req, res) {
+    const filters = {
+      administrators: 1,
+      teachers: 2,
+      coordinators: 3,
+      local_managers: 4,
+      inters: 5,
+      lifeguard: 6,
+      contractors: 7,
+    }
+
+    const filterCounts = {}
+
     User.count()
       .then((count) => {
-        res.status(200).json({
-          users: count,
+        const promises = Object.keys(filters).map((filter) => {
+          return User.count({
+            where: {
+              filter: filters[filter],
+            },
+          })
+            .then((count) => {
+              filterCounts[filter] = count
+            })
+            .catch((err) => {
+              console.error(err)
+              filterCounts[filter] = 0
+            })
         })
+
+        Promise.all(promises)
+          .then(() => {
+            res.status(200).json({ users: count, users_category: filterCounts })
+          })
+          .catch((error) => {
+            res.status(500).json({
+              error: error.message,
+            })
+          })
       })
       .catch((err) => {
         res.status(500).json({
@@ -179,18 +212,24 @@ const UsersController = {
   GetFindUsers(req, res) {
     const page = req.query.page ? parseInt(req.query.page) : 1
     const pageSize = 10
+
     User.findAndCountAll({
       limit: pageSize,
       offset: (page - 1) * pageSize,
     })
       .then((result) => {
         const pageCount = Math.ceil(result.count / pageSize)
-
-        res.status(200).json({
-          users: result.rows.map((user) => user.toJSON()),
-          totalPages: pageCount,
-          currentPage: page,
-        })
+        if (result.count === 0) {
+          res.status(200).json({
+            notfound: "Não existe usuários na base de dados",
+          })
+        } else {
+          res.status(200).json({
+            users: result.rows.map((user) => user.toJSON()),
+            totalPages: pageCount,
+            currentPage: page,
+          })
+        }
       })
       .catch((err) => {
         res.status(500).json({ error: err.message })
