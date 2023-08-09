@@ -4,13 +4,8 @@ const db = require("../database/db")
 const Modality = db.sequelize.define("modalities", {
   name: db.Sequelize.STRING,
   description: db.Sequelize.STRING,
-  programId: {
-    type: db.Sequelize.INTEGER,
-    allowNull: false,
-  },
 })
 
-// Program.hasMany(Modality)
 // Modality.sync({ force: true })
 //   .then(() => {
 //     console.log("Create Modality Table")

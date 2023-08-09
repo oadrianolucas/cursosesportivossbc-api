@@ -256,6 +256,7 @@ const EnrollmentController = {
           description: dateCreate,
           registryId,
           classId,
+          season: season.id,
         }
 
         let bodyClass = {}

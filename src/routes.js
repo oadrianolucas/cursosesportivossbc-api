@@ -34,6 +34,8 @@ router.get("/search/users/:email", usersController.GetFilterUsers)
 router.get("/total/users", usersController.GetFindAllUsers)
 router.get("/users", usersController.GetFindUsers)
 router.get("/gyms", gymsController.GetFindGyms)
+router.get("/modalities", modalityController.GetFindModalities)
+router.get("/institutes", institutesController.GetFindInstitutes)
 router.get("/user/:id", usersController.GetFindUser)
 
 router.get("/", (req, res) => {

@@ -2,6 +2,8 @@
 const db = require("../database/db")
 // const Class = require("../models/Class")
 // const Registry = require("../models/Registry")
+// const Season = require("../models/Season")
+
 const Enrollment = db.sequelize.define("enrollments", {
   token: db.Sequelize.STRING,
   pcd: db.Sequelize.BOOLEAN,
@@ -14,6 +16,9 @@ const Enrollment = db.sequelize.define("enrollments", {
     type: db.Sequelize.INTEGER,
   },
   classId: {
+    type: db.Sequelize.INTEGER,
+  },
+  seasonId: {
     type: db.Sequelize.INTEGER,
   },
 })

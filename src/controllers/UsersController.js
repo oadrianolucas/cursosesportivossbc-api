@@ -175,7 +175,6 @@ const UsersController = {
     }
 
     const filterCounts = {}
-
     User.count()
       .then((count) => {
         const promises = Object.keys(filters).map((filter) => {
@@ -193,9 +192,11 @@ const UsersController = {
             })
         })
 
+        filterCounts["totalUsers"] = count
+
         Promise.all(promises)
           .then(() => {
-            res.status(200).json({ users: count, users_category: filterCounts })
+            res.status(200).json({ users: filterCounts })
           })
           .catch((error) => {
             res.status(500).json({
@@ -209,6 +210,7 @@ const UsersController = {
         })
       })
   },
+
   GetFindUsers(req, res) {
     const page = req.query.page ? parseInt(req.query.page) : 1
     const pageSize = 10
