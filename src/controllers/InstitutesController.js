@@ -66,18 +66,10 @@ const InstitutesController = {
       })
   },
   GetFindInstitutes(req, res) {
-    const page = req.query.page ? parseInt(req.query.page) : 1
-    const pageSize = 10
-    Institute.findAndCountAll({
-      limit: pageSize,
-      offset: (page - 1) * pageSize,
-    })
-      .then(async (result) => {
-        const pageCount = Math.ceil(result.count / pageSize)
-        const institutes = result.rows
+    Institute.findAll({})
+      .then(async (institutes) => {
         const institutesWithAddresses = []
-
-        if (result.count === 0) {
+        if (institutes.length === 0) {
           res.status(200).json({
             notfound: "Não existem institutos na base de dados",
           })
@@ -101,14 +93,30 @@ const InstitutesController = {
 
           res.status(200).json({
             institutes: institutesWithAddresses,
-            totalPages: pageCount,
-            currentPage: page,
           })
         }
       })
       .catch((err) => {
         res.status(500).json({ error: err.message })
       })
+  },
+  PostDeleteInstitute(req, res) {
+    const id = req.body.id
+    if (id != undefined) {
+      if (!isNaN(id)) {
+        Institute.destroy({
+          where: {
+            id: id,
+          },
+        }).then(() => {
+          res.status(200).json({ success: "Instituto deletado com sucesso." })
+        })
+      } else {
+        res.status(500).json({ error: "Instituto criado com sucesso." })
+      }
+    } else {
+      res.status(404).json({ error: "Instituto não encontrado para deletar." })
+    }
   },
 }
 module.exports = InstitutesController

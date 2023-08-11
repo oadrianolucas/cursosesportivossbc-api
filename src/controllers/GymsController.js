@@ -67,21 +67,12 @@ const GymsController = {
       })
   },
   GetFindGyms(req, res) {
-    const page = req.query.page ? parseInt(req.query.page) : 1
-    const pageSize = 10
-
-    Gym.findAndCountAll({
-      limit: pageSize,
-      offset: (page - 1) * pageSize,
-    })
-      .then(async (result) => {
-        const pageCount = Math.ceil(result.count / pageSize)
-        const gyms = result.rows
+    Gym.findAll({})
+      .then(async (gyms) => {
         const gymsWithAddresses = []
-
-        if (result.count === 0) {
+        if (gyms.length === 0) {
           res.status(200).json({
-            notfound: "Não existem academias na base de dados",
+            notfound: "Não existem locais na base de dados",
           })
         } else {
           for (const gym of gyms) {
@@ -103,14 +94,35 @@ const GymsController = {
 
           res.status(200).json({
             gyms: gymsWithAddresses,
-            totalPages: pageCount,
-            currentPage: page,
           })
         }
       })
       .catch((err) => {
         res.status(500).json({ error: err.message })
       })
+  },
+
+  PostDeleteGym(req, res) {
+    const id = req.body.id
+    if (id != undefined) {
+      if (!isNaN(id)) {
+        Gym.destroy({
+          where: {
+            id: id,
+          },
+        }).then(() => {
+          res
+            .status(200)
+            .json({ success: "Centro esportivo deletado com sucesso." })
+        })
+      } else {
+        res.status(500).json({ error: "Centro esportivo criado com sucesso." })
+      }
+    } else {
+      res
+        .status(404)
+        .json({ error: "Centro esportivo não encontrado para deletar." })
+    }
   },
 }
 module.exports = GymsController

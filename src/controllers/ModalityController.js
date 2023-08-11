@@ -22,24 +22,15 @@ const ModalityController = {
     })
   },
   GetFindModalities(req, res) {
-    const page = req.query.page ? parseInt(req.query.page) : 1
-    const pageSize = 10
-
-    Modality.findAndCountAll({
-      limit: pageSize,
-      offset: (page - 1) * pageSize,
-    })
+    Modality.findAll()
       .then((result) => {
-        const pageCount = Math.ceil(result.count / pageSize)
-        if (result.count === 0) {
+        if (result.length === 0) {
           res.status(200).json({
-            notfound: "Não existe modalidades na base de dados",
+            notfound: "Não existem modalidades na base de dados",
           })
         } else {
           res.status(200).json({
-            modalities: result.rows.map((modality) => modality.toJSON()),
-            totalPages: pageCount,
-            currentPage: page,
+            modalities: result.map((modality) => modality.toJSON()),
           })
         }
       })
