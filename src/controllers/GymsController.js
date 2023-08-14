@@ -66,6 +66,7 @@ const GymsController = {
           .json({ error: "Ocorreu um erro ao criar o centro esportivo." })
       })
   },
+
   GetFindGyms(req, res) {
     Gym.findAll({})
       .then(async (gyms) => {
@@ -101,28 +102,82 @@ const GymsController = {
         res.status(500).json({ error: err.message })
       })
   },
-
   PostDeleteGym(req, res) {
     const id = req.body.id
-    if (id != undefined) {
+
+    if (id !== undefined) {
       if (!isNaN(id)) {
-        Gym.destroy({
-          where: {
-            id: id,
-          },
-        }).then(() => {
-          res
-            .status(200)
-            .json({ success: "Centro esportivo deletado com sucesso." })
-        })
+        Gym.findByPk(id)
+          .then(async (gym) => {
+            if (!gym) {
+              return res
+                .status(404)
+                .json({
+                  error: "Centro esportivo não encontrado para deletar.",
+                })
+            }
+
+            const address = await GymAddress.findOne({
+              where: { gymId: gym.id },
+            })
+
+            if (address) {
+              await Address.destroy({
+                where: { id: address.addressId },
+              })
+            }
+
+            await Gym.destroy({
+              where: {
+                id: gym.id,
+              },
+            })
+
+            res
+              .status(200)
+              .json({ success: "Centro esportivo deletado com sucesso." })
+          })
+          .catch((err) => {
+            res.status(500).json({ error: err.message })
+          })
       } else {
-        res.status(500).json({ error: "Centro esportivo criado com sucesso." })
+        res.status(400).json({ error: "ID inválido." })
       }
     } else {
-      res
-        .status(404)
-        .json({ error: "Centro esportivo não encontrado para deletar." })
+      res.status(400).json({ error: "ID não fornecido." })
     }
+  },
+  GetFindGym(req, res) {
+    const id = req.params.id
+    Gym.findByPk(id)
+      .then(async (gym) => {
+        if (!gym) {
+          return res.status(404).json({ error: "Local não encontrado" })
+        }
+
+        const gymData = gym.toJSON()
+
+        const address = await GymAddress.findOne({
+          where: { gymId: gym.id },
+        })
+
+        if (address) {
+          const addressData = await Address.findOne({
+            where: { id: address.addressId },
+          })
+
+          if (addressData) {
+            gymData.Address = addressData.toJSON()
+          }
+        }
+
+        res.status(200).json({
+          gym: gymData,
+        })
+      })
+      .catch((err) => {
+        res.status(500).json({ error: err.message })
+      })
   },
 }
 module.exports = GymsController

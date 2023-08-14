@@ -237,6 +237,7 @@ const UsersController = {
         res.status(500).json({ error: err.message })
       })
   },
+
   GetFindUser(req, res) {
     const id = req.params.id
     User.findByPk(id)
@@ -252,6 +253,7 @@ const UsersController = {
         res.status(500).json({ error: err.message })
       })
   },
+
   GetFilterUsers(req, res) {
     const email = req.params.email
     const page = req.query.page ? parseInt(req.query.page) : 1

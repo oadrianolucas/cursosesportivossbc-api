@@ -40,6 +40,7 @@ router.get("/gyms", gymsController.GetFindGyms)
 router.get("/modalities", modalityController.GetFindModalities)
 router.get("/institutes", institutesController.GetFindInstitutes)
 router.get("/user/:id", usersController.GetFindUser)
+router.get("/gym/:id", gymsController.GetFindGym)
 
 router.get("/", (req, res) => {
   res.status(200).json({ success: msg.success.on })
