@@ -15,7 +15,7 @@ const UsersController = {
     const token = crypto.randomBytes(2).toString("hex")
     User.findOne({ where: { email: email } }).then((user) => {
       if (user != undefined) {
-        res.status(500).json({ error: msg.error.email })
+        res.status(500).json({ error: msg.error.emailExists })
       } else {
         User.create({
           email: email,
@@ -26,7 +26,7 @@ const UsersController = {
         })
           .then(() => {
             nodemailer.emailConfirm(email, token)
-            res.status(200).json({ success: msg.success.create_user })
+            res.status(200).json({ success: msg.success.createUser })
           })
           .catch((err) => {
             res.status(500).json({ error: err })
@@ -50,13 +50,13 @@ const UsersController = {
           }
         )
           .then(() => {
-            res.json({ success: msg.success.email_password_confirm })
+            res.json({ success: msg.success.emailPasswordConfirm })
           })
           .catch((err) => {
             res.json({ error: err })
           })
       } else {
-        res.json({ error: msg.error.email_password_confirm })
+        res.json({ error: msg.error.emailExistsPasswordConfirm })
       }
     })
   },
@@ -65,18 +65,18 @@ const UsersController = {
     User.findOne({ where: { id: id } })
       .then((user) => {
         if (!user) {
-          return res.status(404).json({ error: "Usuário não encontrado." })
+          return res.status(404).json({ error: msg.error.userNotFound })
         }
         User.update({ filter: filter }, { where: { id } })
           .then(() => {
-            res.status(200).json({ success: "Filtro alterado com sucesso." })
+            res.status(200).json({ success: msg.success.updateFilter })
           })
           .catch((error) => {
-            res.status(500).json({ error: "Erro ao atualizar o filtro." })
+            res.status(500).json({ error: msg.error.filterError })
           })
       })
       .catch((error) => {
-        res.status(500).json({ error: "Erro ao buscar o usuário." })
+        res.status(500).json({ error: msg.error.searchUserError })
       })
   },
   PostResetPasswordEmail(req, res) {
@@ -156,10 +156,10 @@ const UsersController = {
             res.status(403).json({ error: msg.error.user_not_confirm_email })
           }
         } else {
-          res.status(401).json({ error: msg.error.password_invalid })
+          res.status(401).json({ error: msg.error.invalidPassword })
         }
       } else {
-        res.status(404).json({ error: msg.error.user_not_found })
+        res.status(404).json({ error: msg.error.emailExists_not_found })
       }
     })
   },
@@ -223,7 +223,7 @@ const UsersController = {
         const pageCount = Math.ceil(result.count / pageSize)
         if (result.count === 0) {
           res.status(200).json({
-            notfound: "Não existe usuários na base de dados",
+            notfound: msg.error.userNotFound,
           })
         } else {
           res.status(200).json({
@@ -243,7 +243,7 @@ const UsersController = {
     User.findByPk(id)
       .then((user) => {
         if (!user) {
-          return res.status(404).json({ error: "Usuário não encontrado" })
+          return res.status(404).json({ error: msg.error.userNotFound })
         }
         res.status(200).json({
           user: user.toJSON(),

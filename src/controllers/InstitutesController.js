@@ -1,6 +1,7 @@
 const Institute = require("../models/Institute")
 const InstituteAddress = require("../models/InstituteAddress")
 const Address = require("../models/Address")
+const msg = require("../middlewares/msg")
 
 const InstitutesController = {
   PostCreateInstitute(req, res) {
@@ -21,7 +22,7 @@ const InstitutesController = {
     Institute.findOne({ where: { name: name } })
       .then((existingInstitute) => {
         if (existingInstitute) {
-          res.status(409).json({ error: "Instituto já foi criado." })
+          res.status(409).json({ error: msg.error.createInstituted })
         } else {
           Institute.create({
             name: (name || "").toLowerCase(),
@@ -46,13 +47,11 @@ const InstitutesController = {
                   })
                 })
                 .then(() => {
-                  res
-                    .status(200)
-                    .json({ success: "Instituto criado com sucesso." })
+                  res.status(200).json({ success: msg.success.createInstitute })
                 })
                 .catch((err) => {
                   res.status(500).json({
-                    error: "Ocorreu um erro ao criar o instituto.",
+                    error: msg.error.createInstituteError,
                   })
                 })
             })
@@ -62,7 +61,7 @@ const InstitutesController = {
         }
       })
       .catch((err) => {
-        res.status(500).json({ error: "Ocorreu um erro ao criar o instituto." })
+        res.status(500).json({ error: msg.error.createInstituteError })
       })
   },
   GetFindInstitutes(req, res) {
@@ -71,7 +70,7 @@ const InstitutesController = {
         const institutesWithAddresses = []
         if (institutes.length === 0) {
           res.status(200).json({
-            notfound: "Não existem institutos na base de dados",
+            notfound: msg.error.noInstitutesFound,
           })
         } else {
           for (const institute of institutes) {
@@ -109,13 +108,13 @@ const InstitutesController = {
             id: id,
           },
         }).then(() => {
-          res.status(200).json({ success: "Instituto deletado com sucesso." })
+          res.status(200).json({ success: msg.success.deleteInstitute })
         })
       } else {
-        res.status(500).json({ error: "Instituto criado com sucesso." })
+        res.status(500).json({ error: msg.error.deleteInstituteError })
       }
     } else {
-      res.status(404).json({ error: "Instituto não encontrado para deletar." })
+      res.status(404).json({ error: msg.error.noInstitutesFound })
     }
   },
 }

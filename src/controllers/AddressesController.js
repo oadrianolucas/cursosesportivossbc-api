@@ -1,7 +1,8 @@
 const UserAddress = require("../models/UserAddress")
 const GymAddress = require("../models/GymAddress")
-
+const msg = require("../middlewares/msg")
 const Address = require("../models/Address")
+
 const AddressesController = {
   PostCreateAddressUser(req, res) {
     const { name, cep, district, city, number, complement, state, userId } =
@@ -22,15 +23,19 @@ const AddressesController = {
         })
           .then(() => {
             res.json({
-              success: "Endereço criado com sucesso.",
+              success: msg.success.createAddress,
             })
           })
           .catch((err) => {
-            res.json({ error: err })
+            res.json({
+              error: msg.error.createAddress,
+            })
           })
       })
       .catch((err) => {
-        res.json({ error: err })
+        res.json({
+          error: msg.error.createAddress,
+        })
       })
   },
   PostCreateAddressGym(req, res) {
@@ -52,15 +57,19 @@ const AddressesController = {
         })
           .then(() => {
             res.json({
-              success: "Endereço criado com sucesso.",
+              success: msg.success.createAddress,
             })
           })
           .catch((err) => {
-            res.json({ error: err })
+            res.json({
+              error: msg.error.createAddress,
+            })
           })
       })
       .catch((err) => {
-        res.json({ error: err })
+        res.json({
+          error: msg.error.createAddress,
+        })
       })
   },
 }

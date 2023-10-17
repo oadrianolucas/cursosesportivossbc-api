@@ -2,22 +2,19 @@ const { json } = require("body-parser")
 const mailer = require("nodemailer")
 const status = require("./msg")
 
-const userEmail = "augustine.gulgowski92@ethereal.email"
-const passwordEmail = "Pn29dhKMbMfgf3Z9zh"
-
 const tranporter = mailer.createTransport({
-  host: "smtp.ethereal.email",
-  port: 587,
+  host: process.env.EMAIL_HOST,
+  port: process.env.EMAIL_PORT,
   auth: {
-    user: userEmail,
-    pass: passwordEmail,
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASSWORD,
   },
 })
 
 const nodemailer = {
   emailConfirm(email, token) {
     const message = {
-      from: userEmail,
+      from: process.env.EMAIL_USER,
       to: email,
       subject:
         "Confirme sua conta no Cursos Esportivos de São Bernardo do Campo.",
@@ -38,7 +35,7 @@ const nodemailer = {
   },
   emailResetPassword(email, token) {
     const message = {
-      from: userEmail,
+      from: process.env.EMAIL_USER,
       to: email,
       subject: "Alterar Senha Cursos Esportivos de São Bernardo do Campo.",
       html: `

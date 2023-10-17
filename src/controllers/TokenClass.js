@@ -2,6 +2,7 @@ const TokenClass = require("../models/TokenClass")
 const Registry = require("../models/Registry")
 const crypto = require("crypto")
 const msg = require("../middlewares/msg")
+
 const TokenClassController = {
   PostCreateTokenClass(req, res) {
     const { registryId, classId } = req.body
@@ -16,13 +17,13 @@ const TokenClassController = {
           classId,
         })
           .then(() => {
-            res.json({ success: "token feito" })
+            res.json({ success: msg.success.createToken })
           })
           .catch((err) => {
             res.json({ error: err })
           })
       } else {
-        res.json({ error: "registro não encotrado" })
+        res.json({ error: msg.error.registryNotFound })
       }
     })
   },

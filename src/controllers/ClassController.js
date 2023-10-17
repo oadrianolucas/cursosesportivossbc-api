@@ -1,7 +1,7 @@
 const Class = require("../models/Class")
 const SchoolCall = require("../models/SchoolCall")
-
 const msg = require("../middlewares/msg")
+
 const moment = require("moment")
 const ClassController = {
   PostCreateClass(req, res) {
@@ -28,7 +28,7 @@ const ClassController = {
     } = req.body
     Class.findOne({ where: { name: name } }).then((gym) => {
       if (gym != undefined) {
-        res.json({ error: "turma já foi criado." })
+        res.json({ error: msg.error.classExists })
       } else {
         const datehourEnrollment = moment(
           `${dateEnrollment} ${hourEnrollment}`,
@@ -64,7 +64,7 @@ const ClassController = {
           modalityId,
         })
           .then(() => {
-            res.json({ success: "turma criada com sucesso." })
+            res.json({ success: msg.success.createClass })
           })
           .catch((err) => {
             res.json({ error: err })

@@ -8,6 +8,7 @@ const User = require("../models/User")
 const Enrollment = require("../models/Enrollment")
 const sequelize = require("sequelize")
 const moment = require("moment")
+const msg = require("../middlewares/msg")
 
 /* 
   Status == 5 -> Fila de espera
@@ -42,16 +43,16 @@ const EnrollmentController = {
         const enrolledClass = await Class.findByPk(classId)
 
         if (!user) {
-          return res.send({ error: "Usuário não encontrado" })
+          return res.send({ error: msg.error.userNotFound })
         }
         if (!registry) {
-          return res.send({ error: "Registro não encontrado" })
+          return res.send({ error: msg.error.registryNotFound })
         }
         if (registry.userId !== userId) {
-          return res.send({ error: "Esse registro não pertence ao usuário" })
+          return res.send({ error: msg.error.registryNotBelongToUser })
         }
         if (!enrolledClass) {
-          return res.send({ error: "Turma não encontrada" })
+          return res.send({ error: msg.error.classExists })
         }
 
         const modality = await Modality.findByPk(enrolledClass.modalityId)
@@ -60,16 +61,16 @@ const EnrollmentController = {
         const gym = await Gym.findByPk(enrolledClass.gymId)
 
         if (!modality) {
-          return res.send({ error: "Modalidade não encontrada" })
+          return res.send({ error: msg.error.modalityNotFound })
         }
         if (!program) {
-          return res.send({ error: "Programa não encontrado" })
+          return res.send({ error: msg.error.programNotFound })
         }
         if (!season) {
-          return res.send({ error: "Temporada não encontrada" })
+          return res.send({ error: msg.error.seasonNotFound })
         }
         if (!gym) {
-          return res.send({ error: "Centro esportivo não encontrado" })
+          return res.send({ error: msg.error.gymNotFound })
         }
         const hash = `${season.year}-${enrolledClass.modalityId}-${enrolledClass.period}-${modality.programId}-${enrolledClass.gymId}-${classId}`
         const currentMonth = new Date().getMonth() + 1
@@ -99,13 +100,12 @@ const EnrollmentController = {
 
             if (lastEnrollmentWithStatusZero.createdAt > sixMonthsAgo) {
               return res.json({
-                error:
-                  "Não é possível criar uma nova inscrição por 6 meses devido ao não comparecimento em pelo menos 75% das aulas de um curso anterior. É lembrado da importância de participar ativamente das aulas e se preparar para futuras oportunidades de matrícula. Agradecimentos e desejos de sucesso são expressos.",
+                error: msg.error.sixMonthRestriction,
               })
             }
           } else {
             return res.json({
-              error: "Já existe uma inscrição para essa modalidade e registro",
+              error: msg.error.subscriptionExists,
             })
           }
         }
@@ -129,8 +129,7 @@ const EnrollmentController = {
 
           if (enrollmentsWithStatusOneOrThree >= 3) {
             return res.json({
-              error:
-                "Não é possível atualizar a inscrição, pois já existem 3 ou mais inscrições com status 'Inscrito' ou 'Matriculado'.",
+              error: msg.error.threeMonthRestriction,
             })
           }
 
@@ -143,7 +142,7 @@ const EnrollmentController = {
             { status: 3, description: updatedDescription },
             { where: { id: existingEnrollmentWithStatusTwo.id } }
           )
-          return res.json({ success: "Inscrição atualizada com sucesso." })
+          return res.json({ success: msg.success.updateSubscription })
         }
 
         const existingEnrollment = await Enrollment.findOne({
@@ -173,7 +172,7 @@ const EnrollmentController = {
         })
         if (existingEnrollment) {
           return res.json({
-            error: "Já existe uma inscrição com essa modalidade",
+            error: msg.error.subscriptionExistsForModality,
           })
         }
 
@@ -309,7 +308,7 @@ const EnrollmentController = {
         }
       } catch (err) {
         console.error(err)
-        res.status(500).json({ error: "Erro ao realizar a inscrição" })
+        res.status(500).json({ error: "Erro ao realizar a inscrição." })
       }
     }
     createEnrollment()

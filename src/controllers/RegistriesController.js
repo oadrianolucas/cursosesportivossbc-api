@@ -1,13 +1,14 @@
 const Registry = require("../models/Registry")
 const User = require("../models/User")
 const msg = require("../middlewares/msg")
+
 const RegistriesController = {
   PostCreateRegistry(req, res) {
     const { cpf, birth, userId, name, phone, sexy, sus, pcd, cadUnico } =
       req.body
     Registry.findOne({ where: { cpf: cpf } }).then((registry) => {
       if (registry != undefined) {
-        res.json({ error: msg.error.cpf_found })
+        res.json({ error: msg.error.cpfExists })
       } else {
         User.findByPk(userId).then((user) => {
           if (user != undefined) {
@@ -22,7 +23,7 @@ const RegistriesController = {
               const idadeEmAnos =
                 idadeEmMilissegundos / (365.25 * 24 * 60 * 60 * 1000)
               if (idadeEmAnos < 18) {
-                res.json({ error: msg.error.biggerorequal18 })
+                res.json({ error: msg.error.ageRequirement })
               } else {
                 Registry.create({
                   name: (name || "").toLowerCase(),
@@ -36,7 +37,7 @@ const RegistriesController = {
                   userId,
                 })
                   .then(() => {
-                    res.json({ success: msg.success.create_registry })
+                    res.json({ success: msg.success.createRegistry })
                   })
                   .catch((err) => {
                     res.json({ error: err })
@@ -69,14 +70,14 @@ const RegistriesController = {
                 userId,
               })
                 .then(() => {
-                  res.json({ success: msg.success.create_registry })
+                  res.json({ success: msg.success.createRegistry })
                 })
                 .catch((err) => {
                   res.json({ error: err })
                 })
             }
           } else {
-            res.json({ error: msg.error.user_not_found })
+            res.json({ error: msg.error.emailExists_not_found })
           }
         })
       }
