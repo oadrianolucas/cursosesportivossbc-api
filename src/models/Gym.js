@@ -5,10 +5,4 @@ const Gym = db.sequelize.define("gyms", {
   description: db.Sequelize.STRING,
 })
 
-// Gym.sync({ force: true })
-//   .then(() => {
-//     console.log("Create Gym Table")
-//   })
-//   .catch((err) => console.log("Err Create Gym Table: " + err))
-
 module.exports = Gym

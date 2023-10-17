@@ -1,7 +1,5 @@
 // Turma
 const db = require("../database/db")
-// const Gym = require("../models/Gym")
-// const Modality = require("../models/Modality")
 const Class = db.sequelize.define("classes", {
   name: db.Sequelize.STRING,
   level: db.Sequelize.STRING,
@@ -36,13 +34,5 @@ const Class = db.sequelize.define("classes", {
     allowNull: false,
   },
 })
-
-// Gym.hasMany(Class)
-// Class.belongsTo(Modality)
-// Class.sync({ force: true })
-//   .then(() => {
-//     console.log("Create Class Table")
-//   })
-//   .catch((err) => console.log("Err Create Class Table: " + err))
 
 module.exports = Class

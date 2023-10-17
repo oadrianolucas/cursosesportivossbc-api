@@ -153,13 +153,13 @@ const UsersController = {
             }
             res.status(200).json({ success: msg.success.login, auth: auth })
           } else {
-            res.status(403).json({ error: msg.error.user_not_confirm_email })
+            res.status(403).json({ error: msg.error.emailPasswordConfirm })
           }
         } else {
           res.status(401).json({ error: msg.error.invalidPassword })
         }
       } else {
-        res.status(404).json({ error: msg.error.emailExists_not_found })
+        res.status(404).json({ error: msg.error.emailNotFound })
       }
     })
   },

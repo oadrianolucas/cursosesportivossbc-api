@@ -1,7 +1,7 @@
 const Gym = require("../models/Gym")
 const GymAddress = require("../models/GymAddress")
 const Address = require("../models/Address")
-const msg = require("../middlewares/msg")
+const msg = require("../middlewares/msg") // Importe o módulo com as mensagens de erro e sucesso
 
 const GymsController = {
   PostCreateGym(req, res) {
@@ -20,7 +20,7 @@ const GymsController = {
     Gym.findOne({ where: { name: name } })
       .then((existingGym) => {
         if (existingGym) {
-          res.status(409).json({ error: "Centro esportivo já foi criado." })
+          res.status(409).json({ error: msg.error.duplicateGym })
         } else {
           Gym.create({
             name: (name || "").toLowerCase(),
@@ -43,27 +43,21 @@ const GymsController = {
                   })
                 })
                 .then(() => {
-                  res
-                    .status(200)
-                    .json({ success: "Centro esportivo criado com sucesso." })
+                  res.status(200).json({ success: msg.success.createGym })
                 })
                 .catch((err) => {
                   res.status(500).json({
-                    error: "Ocorreu um erro ao criar o centro esportivo.",
+                    error: msg.error.createGymError,
                   })
                 })
             })
             .catch((err) => {
-              res
-                .status(500)
-                .json({ error: "Ocorreu um erro ao criar o centro esportivo." })
+              res.status(500).json({ error: msg.error.createGymError })
             })
         }
       })
       .catch((err) => {
-        res
-          .status(500)
-          .json({ error: "Ocorreu um erro ao criar o centro esportivo." })
+        res.status(500).json({ error: msg.error.createGymError })
       })
   },
 
@@ -73,7 +67,7 @@ const GymsController = {
         const gymsWithAddresses = []
         if (gyms.length === 0) {
           res.status(200).json({
-            notfound: "Não existem locais na base de dados",
+            notfound: msg.error.noGymsFound,
           })
         } else {
           for (const gym of gyms) {
@@ -99,85 +93,9 @@ const GymsController = {
         }
       })
       .catch((err) => {
-        res.status(500).json({ error: err.message })
-      })
-  },
-  PostDeleteGym(req, res) {
-    const id = req.body.id
-
-    if (id !== undefined) {
-      if (!isNaN(id)) {
-        Gym.findByPk(id)
-          .then(async (gym) => {
-            if (!gym) {
-              return res
-                .status(404)
-                .json({
-                  error: "Centro esportivo não encontrado para deletar.",
-                })
-            }
-
-            const address = await GymAddress.findOne({
-              where: { gymId: gym.id },
-            })
-
-            if (address) {
-              await Address.destroy({
-                where: { id: address.addressId },
-              })
-            }
-
-            await Gym.destroy({
-              where: {
-                id: gym.id,
-              },
-            })
-
-            res
-              .status(200)
-              .json({ success: "Centro esportivo deletado com sucesso." })
-          })
-          .catch((err) => {
-            res.status(500).json({ error: err.message })
-          })
-      } else {
-        res.status(400).json({ error: "ID inválido." })
-      }
-    } else {
-      res.status(400).json({ error: "ID não fornecido." })
-    }
-  },
-  GetFindGym(req, res) {
-    const id = req.params.id
-    Gym.findByPk(id)
-      .then(async (gym) => {
-        if (!gym) {
-          return res.status(404).json({ error: "Local não encontrado" })
-        }
-
-        const gymData = gym.toJSON()
-
-        const address = await GymAddress.findOne({
-          where: { gymId: gym.id },
-        })
-
-        if (address) {
-          const addressData = await Address.findOne({
-            where: { id: address.addressId },
-          })
-
-          if (addressData) {
-            gymData.Address = addressData.toJSON()
-          }
-        }
-
-        res.status(200).json({
-          gym: gymData,
-        })
-      })
-      .catch((err) => {
-        res.status(500).json({ error: err.message })
+        res.status(500).json({ error: msg.error.findGymsError })
       })
   },
 }
+
 module.exports = GymsController

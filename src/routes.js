@@ -17,28 +17,18 @@ const {
   GetFindUser,
 } = require("./controllers/UsersController")
 
-const {
-  PostCreateSeason,
-  PostCreateProgram,
-} = require("./controllers/SeasonsController")
+const { PostCreateSeason } = require("./controllers/SeasonsController")
 
-const {
-  PostCreateGym,
-  PostDeleteGym,
-  GetFindGyms,
-} = require("./controllers/GymsController")
+const { PostCreateGym, GetFindGyms } = require("./controllers/GymsController")
 
 const {
   PostCreateModality,
   GetFindModalities,
 } = require("./controllers/ModalityController")
 
-const { PostCreateClass, GetFindGym } = require("./controllers/ClassController")
+const { PostCreateClass } = require("./controllers/ClassController")
 
-const {
-  PostCreateEnrollment,
-  PostCreateTokenClass,
-} = require("./controllers/EnrollmentController")
+const { PostCreateEnrollment } = require("./controllers/EnrollmentController")
 
 const {
   PostCreateInstitute,
@@ -50,6 +40,8 @@ const {
   PostCreateAddressUser,
   PostCreateAddressGym,
 } = require("./controllers/AddressesController")
+
+const { PostCreateRegistry } = require("./controllers/RegistriesController")
 
 // Define routes
 router.post("/signup", PostSingUp)
@@ -64,12 +56,9 @@ router.get("/users", GetFindUsers)
 router.get("/user/:id", GetFindUser)
 
 router.post("/create/season", PostCreateSeason)
-router.post("/create/program", PostCreateProgram)
 
 router.post("/create/gym", PostCreateGym)
-router.post("/delete/gym", PostDeleteGym)
 router.get("/gyms", GetFindGyms)
-router.get("/gym/:id", GetFindGym)
 
 router.post("/create/modality", PostCreateModality)
 router.get("/modalities", GetFindModalities)
@@ -77,7 +66,6 @@ router.get("/modalities", GetFindModalities)
 router.post("/create/class", PostCreateClass)
 
 router.post("/create/enrollment", PostCreateEnrollment)
-router.post("/create/token/class", PostCreateTokenClass)
 
 router.post("/create/institute", PostCreateInstitute)
 router.post("/delete/institute", PostDeleteInstitute)
@@ -85,6 +73,8 @@ router.get("/institutes", GetFindInstitutes)
 
 router.post("/create/address/user", PostCreateAddressUser)
 router.post("/create/address/gym", PostCreateAddressGym)
+
+router.post("/create/registry", PostCreateRegistry)
 
 // Default route
 router.get("/", (req, res) => {

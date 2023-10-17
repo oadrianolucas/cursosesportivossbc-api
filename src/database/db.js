@@ -1,14 +1,9 @@
 const Sequelize = require("sequelize")
-const sequelize = new Sequelize(
-  process.env.DB_NAME,
-  process.env.DB_USER,
-  process.env.DB_PASSWORD,
-  {
-    host: process.env.DB_HOST,
-    dialect: process.env.DB_DIALECT,
-    port: process.env.DB_PORT,
-  }
-)
+const sequelize = new Sequelize("cursosesportivos", "root", "root", {
+  host: "localhost",
+  dialect: "mysql",
+  port: 3308,
+})
 
 module.exports = {
   sequelize: sequelize,
@@ -21,5 +16,5 @@ sequelize
     console.log("connect databases success.")
   })
   .catch((err) => {
-    console.log("error connect databases success " + err)
+    console.log("error connect databases success: " + err)
   })

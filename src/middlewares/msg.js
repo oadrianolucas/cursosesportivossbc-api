@@ -16,6 +16,10 @@ const status = {
     createModality: "Modalidade criada com sucesso.",
     createInstitute: "Instituto criado com sucesso.",
     deleteInstitute: "Instituto deletado com sucesso.",
+    createGym: "Centro esportivo criado com sucesso.",
+    deleteGym: "Centro esportivo deletado com sucesso.",
+    findGyms: "Lista de centros esportivos encontrada com sucesso.",
+    findGym: "Detalhes do centro esportivo encontrados com sucesso.",
   },
   error: {
     off: "Desativado",
@@ -55,6 +59,12 @@ const status = {
     createInstituteError: "Ocorreu um erro ao criar o instituto.",
     noInstitutesFound: "Não existem institutos na base de dados.",
     deleteInstituteError: "Ocorreu algum erro ao deletar instituto.",
+    duplicateGym: "Centro esportivo já foi criado.",
+    createGymError: "Ocorreu um erro ao criar o centro esportivo.",
+    deleteGymError: "Ocorreu um erro ao deletar o centro esportivo.",
+    findGymsError: "Ocorreu um erro ao buscar a lista de centros esportivos.",
+    findGymError: "Ocorreu um erro ao buscar os detalhes do centro esportivo.",
+    noGymsFound: "Não existem centros esportivos na base de dados.",
   },
 }
 
