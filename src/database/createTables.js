@@ -70,15 +70,14 @@ UserAddress.belongsTo(User)
 Address.hasMany(UserAddress)
 UserAddress.belongsTo(Address)
 
-// Função para criar as tabelas
 async function createTables() {
   try {
-    await sequelize.sync({ force: true }) // Cria as tabelas
+    await sequelize.sync({ force: true }) 
     console.log("Tabelas criadas com sucesso!")
   } catch (error) {
     console.error("Erro ao criar tabelas:", error)
   } finally {
-    await sequelize.close() // Fecha a conexão com o banco de dados
+    await sequelize.close()
   }
 }
 

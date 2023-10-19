@@ -2,7 +2,7 @@ const status = {
   success: {
     welcome: "Bem-vindo à API de Cursos Esportivos.",
     createUser:
-      "Conta criada com sucesso. Enviamos um e-mail para ativação da conta. Verifique a pasta 'SPAM'.",
+      "Conta criada com sucesso.",
     emailPasswordConfirm: "Parabéns, sua conta está ativa.",
     login: "Login efetuado com sucesso.",
     createRegistry: "Registro criado com sucesso.",
@@ -20,9 +20,12 @@ const status = {
     deleteGym: "Centro esportivo deletado com sucesso.",
     findGyms: "Lista de centros esportivos encontrada com sucesso.",
     findGym: "Detalhes do centro esportivo encontrados com sucesso.",
+    emailTokenUpdate: "Token atualizado com sucesso.",
+    updatePassword: "Enviamos uma nova senha para seu e-mail.",
+    newPassword: "Senha atualizada com sucesso."
   },
   error: {
-    off: "Desativado",
+    off: "Sistema fora do ar.",
     e404: "Erro 404",
     emailExists: "E-mail já está cadastrado.",
     emailPasswordConfirm: "Conta inativa ou token inválido.",
@@ -65,6 +68,11 @@ const status = {
     findGymsError: "Ocorreu um erro ao buscar a lista de centros esportivos.",
     findGymError: "Ocorreu um erro ao buscar os detalhes do centro esportivo.",
     noGymsFound: "Não existem centros esportivos na base de dados.",
+    tokenInvalid: "Token inválido.",
+    tokenUpdateFailed: "Erro ao gerar novo token.",
+    sendEmail: "Erro ao enviar e-mail.",
+    updatePassword: "Pedido de redefinição de senha: Você será redirecionado para a página de alteração de senha.",
+    newPasswordNotFound: "Senha inválida, verifique sua caixa de email."
   },
 }
 

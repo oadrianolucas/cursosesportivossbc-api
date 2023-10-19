@@ -1,21 +1,21 @@
-const User = require("../models/User")
-const AdminCourse = require("../models/AdminCourse")
-const msg = require("../middlewares/msg")
-const nodemailer = require("../middlewares/nodemailer")
-const crypto = require("crypto")
-const bcrypt = require("bcryptjs")
-const jwt = require("jsonwebtoken")
-const secretKey = "superSecretKey"
+const User = require("../models/User");
+const msg = require("../middlewares/msg");
+const crypto = require("crypto");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const secretKey = "superSecretKey";
+const emailSender = require("../middlewares/nodemailer");
 
 const UsersController = {
   PostSingUp(req, res) {
-    const { email, password } = req.body
-    const salt = bcrypt.genSaltSync(10)
-    const hash = bcrypt.hashSync(password, salt)
-    const token = crypto.randomBytes(2).toString("hex")
+    const { email, password } = req.body;
+    const salt = bcrypt.genSaltSync(10);
+    const hash = bcrypt.hashSync(password, salt);
+    const token = crypto.randomBytes(2).toString("hex");
+
     User.findOne({ where: { email: email } }).then((user) => {
       if (user != undefined) {
-        res.status(500).json({ error: msg.error.emailExists })
+        res.status(500).json({ error: msg.error.emailExists });
       } else {
         User.create({
           email: email,
@@ -24,42 +24,71 @@ const UsersController = {
           filter: 0,
           status: 0,
         })
-          .then(() => {
-            nodemailer.emailConfirm(email, token)
-            res.status(200).json({ success: msg.success.createUser })
+          .then(async () => {
+            try {
+              await emailSender.emailConfirm(email, token);
+              res.status(200).json({ success: msg.success.createUser });
+            } catch (err) {
+              res.status(500).json({ error: msg.error.sendEmail });
+            }
           })
           .catch((err) => {
-            res.status(500).json({ error: err })
-          })
+            res.status(500).json({ error: err });
+          });
       }
-    })
+    });
+  },
+  PostResetToken(req, res){
+    const {email} = req.body;
+    const token = crypto.randomBytes(2).toString("hex");
+    User.findOne({where: {email: email}}).then((user) =>{
+      if (!user) {
+        return res.status(404).json({ error: msg.error.userNotFound });
+      }
+      return User.update(
+        { token: token },
+        { where: { email: email } }
+      )
+      .then(async () => {
+        try {
+          await emailSender.emailConfirm(email, token);
+          res.status(200).json({ success: msg.success.emailTokenUpdate });
+        } catch (err) {
+          res.status(500).json({ error: msg.error.sendEmail });
+        }
+      })
+      .catch((err) => {
+        res.status(500).json({ error: err });
+      });
+    });
   },
   PostEmailToken(req, res) {
-    const email = req.body.email
-    const token = req.body.token
-    User.findOne({ where: { email: email, token: token } }).then((user) => {
-      if (user != undefined) {
-        User.update(
-          {
-            token: null,
-          },
-          {
-            where: {
-              email: email,
-            },
-          }
+    const { email, token } = req.body;
+    User.findOne({ where: { email: email } })
+      .then((user) => {
+        if (!user) {
+          return res.status(404).json({ error: msg.error.userNotFound });
+        }
+        if (user.token !== token) {
+          return res.status(403).json({ error: msg.error.tokenInvalid });
+        }
+        return User.update(
+          { token: null },
+          { where: { email: email } }
         )
           .then(() => {
-            res.json({ success: msg.success.emailPasswordConfirm })
+            res.status(200).json({ success: msg.success.emailTokenUpdate });
           })
-          .catch((err) => {
-            res.json({ error: err })
-          })
-      } else {
-        res.json({ error: msg.error.emailExistsPasswordConfirm })
-      }
-    })
-  },
+          .catch((error) => {
+            console.error(error);
+            res.status(500).json({ error: msg.error.tokenUpdateFailed });
+          });
+      })
+      .catch((error) => {
+        console.error(error);
+        res.status(500).json({ error: msg.error.serverError });
+      });
+  },  
   PostAlterFilter(req, res) {
     const { id, filter } = req.body
     User.findOne({ where: { id: id } })
@@ -80,13 +109,16 @@ const UsersController = {
       })
   },
   PostResetPasswordEmail(req, res) {
-    const email = req.body.email
-    const token = crypto.randomBytes(2).toString("hex")
+    const { email } = req.body
+    const password = crypto.randomBytes(2).toString("hex")
+    const salt = bcrypt.genSaltSync(10);
+    const hash = bcrypt.hashSync(password, salt);
     User.findOne({ where: { email: email } }).then((user) => {
       if (user != undefined) {
         User.update(
           {
-            token: token,
+            password: hash,
+            filter: 10,
           },
           {
             where: {
@@ -94,46 +126,58 @@ const UsersController = {
             },
           }
         )
-          .then(() => {
-            nodemailer.emailResetPassword(email, token)
-            res.json(msg.success)
-          })
-          .catch((err) => {
-            res.json({ error: err })
-          })
+        .then(async () => {
+          try {
+            await emailSender.emailResetPassword(email, password)
+            res.status(200).json({success: msg.success.updatePassword})
+          } catch (err) {
+            console.error(err)
+            res.status(500).json({ error: msg.error.sendEmail });
+          }
+        })
       } else {
-        res.json(msg.error)
+        res.status(404).json({error: msg.error.invalidEmail})
       }
     })
   },
-  PostResetPassword(req, res) {
-    const id = req.body.id
-    const password = req.body.password
-    const compare_password = req.body.compare_password
-    const salt = bcrypt.genSaltSync(10)
-    const hash = bcrypt.hashSync(password, salt)
-    if (password == compare_password) {
-      User.update(
-        {
-          token: null,
-          password: hash,
-        },
-        {
-          where: {
-            id: id,
-          },
+  PostUpdatePassword(req, res) {
+    const { email, password_now, password } = req.body;
+    const salt = bcrypt.genSaltSync(10);
+    const hash = bcrypt.hashSync(password, salt);
+
+    User.findOne({ where: { email: email } })
+      .then((user) => {
+        if (!user) {
+          return res.status(404).json({ error: msg.error.userNotFound });
         }
-      )
-        .then(() => {
-          res.json(msg.success)
-        })
-        .cath((err) => {
-          res.json({ error: err })
-        })
-    } else {
-      res.json(msg.error)
-    }
-  },
+        const correct = bcrypt.compareSync(password_now, user.password)
+        if (correct) {
+          User.update(
+            {
+              token: null,
+              password: hash,
+              filter: 0,
+            },
+            {
+              where: {
+                id: user.id,
+              },
+            }
+          )
+            .then(() => {
+              res.json({success: msg.success.newPassword});
+            })
+            .catch((err) => {
+              res.json({ error: err });
+            });
+        } else {
+          return res.status(404).json({ error: msg.error.newPasswordNotFound });
+        }
+      })
+      .catch(() => {
+        res.json(msg.error);
+      });
+  },  
   PostLogin(req, res) {
     const email = req.body.email
     const password = req.body.password
@@ -142,7 +186,6 @@ const UsersController = {
       if (user != undefined) {
         const correct = bcrypt.compareSync(password, user.password)
         const emailConfirmationToken = user.token
-
         if (correct) {
           if (emailConfirmationToken == null) {
             const auth = jwt.sign({ email }, secretKey, { expiresIn: "1h" })
@@ -151,7 +194,11 @@ const UsersController = {
               email: user.email,
               auth: auth,
             }
-            res.status(200).json({ success: msg.success.login, auth: auth })
+            if (user.filter === 10){
+              res.status(408).json({ error: msg.error.updatePassword })
+            } else {
+              res.status(200).json({ success: msg.success.login, auth: auth })
+            }
           } else {
             res.status(403).json({ error: msg.error.emailPasswordConfirm })
           }

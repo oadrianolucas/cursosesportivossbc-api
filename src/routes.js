@@ -10,11 +10,13 @@ const {
   PostLogin,
   PostEmailToken,
   PostResetPasswordEmail,
+  PostUpdatePassword,
   PostAlterFilter,
   GetFilterUsers,
   GetFindAllUsers,
   GetFindUsers,
   GetFindUser,
+  PostResetToken
 } = require("./controllers/UsersController")
 
 const { PostCreateSeason } = require("./controllers/SeasonsController")
@@ -49,6 +51,8 @@ router.post("/logout", PostLogoutUser)
 router.post("/login", PostLogin)
 router.post("/email/token", PostEmailToken)
 router.post("/reset/password", PostResetPasswordEmail)
+router.post("/update/password", PostUpdatePassword)
+router.post("/reset/token", PostResetToken)
 router.post("/alter/filter/user", PostAlterFilter)
 router.get("/search/users/:email", GetFilterUsers)
 router.get("/total/users", GetFindAllUsers)
